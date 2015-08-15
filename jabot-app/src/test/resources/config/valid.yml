@@ -1,0 +1,14 @@
+name: jabot
+adapter: # require one adapter
+  plugin: com.krrrr38.jabot.adapter.ShellAdapter
+  namespace: shell-adapter
+  options:
+    prompt: "> "
+    foo: bar
+handlers: # NOTE: messages would be handled by THIS ORDER.
+  - plugin: com.krrrr38.jabot.handler.PingHandler
+    namespace: ping-handler
+  - plugin: com.krrrr38.jabot.handler.EchoHandler
+    namespace: echo-handler
+    options:
+      foo: bar
