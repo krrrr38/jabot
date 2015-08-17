@@ -23,12 +23,12 @@ public class JabotContext {
     }
 
     public void send(String message) {
-        logger.info("Send message: {}", message);
+        logger.debug("Send message: {}", message);
         adapter.post(message);
     }
 
     public void receive(String message) {
-        logger.info("Receive message: {}", message);
+        logger.debug("Receive message: {}", message);
         handlers.stream()
                 .reduce(Optional.of(message),
                         (maybeMessage, handler) -> maybeMessage.flatMap(handler::receive),

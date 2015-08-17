@@ -1,17 +1,17 @@
 ## this file is example plugins setting
 name: jabot
 adapter: # require one adapter
-  plugin: com.krrrr38.jabot.plugin.adapter.SlackAdapter
-  namespace: slack-adapter
+  plugin: com.krrrr38.jabot.plugin.adapter.ShellAdapter
+  namespace: shell-adapter
   options:
-    token: "access https://slack.com/services/new/bot and enter above name and get token"
-    channel: "general"
-## If you want to try with shell, remove SlackAdapter and enter ShellAdapter
-#adapter: # require one adapter
-#  plugin: com.krrrr38.jabot.plugin.adapter.ShellAdapter
-#  namespace: shell-adapter
-#  options:
-#    prompt: "> "
+    prompt: "> "
+# If you want to try with slack, remove Shelldapter and enter SlackAdapter
+# adapter: # require one adapter
+#   plugin: com.krrrr38.jabot.plugin.adapter.SlackAdapter
+#   namespace: slack-adapter
+#   options:
+#     token: "access https://slack.com/services/new/bot and enter above name and get token"
+#     channel: "general"
 handlers: # NOTE: messages would be handled by THIS ORDER.
   - plugin: com.krrrr38.jabot.plugin.handler.ReplaceHandler
     namespace: replace-handler
