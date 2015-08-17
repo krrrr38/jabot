@@ -13,7 +13,10 @@ This module is inspired by [Ruboty](https://github.com/r7kamura/ruboty), thank y
 
 ## Usage
 
+Access [Releases Page](https://github.com/krrrr38/jabot/releases).
+
 1. downlaod `jabot-app-*-executable.zip` and unzip (`mvn clean package`)
+  - __NOTE__: Do not choose Source code zip. Please choose `jabot-app-**-executable.zip`.
 2. edit `plugins.yml` to load adapter and handlers
 3. add custom plugin into `lib` directory
 4. `sh bin/jabot` (`-c /path/to/plugins.yml`)

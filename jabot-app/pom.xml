@@ -138,6 +138,24 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>de.jutzig</groupId>
+                <artifactId>github-release-plugin</artifactId>
+                <version>1.1.1</version>
+                <configuration>
+                    <tag>${parent.artifactId}-${project.version}</tag>
+                    <repositoryId>krrrr38/jabot</repositoryId>
+                    <fileSets>
+                        <fileSet>
+                            <directory>jabot-app/target/</directory>
+                            <includes>
+                                <include>*-executable.tar.gz</include>
+                                <include>*-executable.zip</include>
+                            </includes>
+                        </fileSet>
+                    </fileSets>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
