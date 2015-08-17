@@ -1,11 +1,12 @@
 # Jabot
 
 [![Build Status](https://secure.travis-ci.org/krrrr38/jabot.png)](http://travis-ci.org/krrrr38/jabot)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.krrrr38/jabot/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.krrrr38/jabot)
 [![License: MIT](http://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Java + HuBot ⇒ Jabot
+Java + Bot ⇒ Jabot
 
-require Java8 or more
+require Java8 or later
 
 This module is inspired by [Ruboty](https://github.com/r7kamura/ruboty), thank you [r7kamura](https://github.com/r7kamura).
 
