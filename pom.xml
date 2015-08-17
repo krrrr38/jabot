@@ -4,7 +4,7 @@
 
     <groupId>com.krrrr38</groupId>
     <artifactId>jabot</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Jabot</name>
@@ -32,7 +32,7 @@
         <url>https://github.com/krrrr38/jabot</url>
         <connection>scm:git:https://github.com/krrrr38/jabot.git</connection>
         <developerConnection>scm:git:https://github.com/krrrr38/jabot.git</developerConnection>
-        <tag>jabot-0.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
