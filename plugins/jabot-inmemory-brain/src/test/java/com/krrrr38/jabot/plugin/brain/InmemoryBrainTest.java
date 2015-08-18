@@ -1,14 +1,22 @@
 package com.krrrr38.jabot.plugin.brain;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class InmemoryBrainTest {
-    private Brain brain = new InmemoryBrain();
+    private Brain brain;
+
+    @Before
+    public void setUp() throws Exception {
+        brain = new InmemoryBrain();
+        brain.setup("jabot", Collections.emptyMap());
+    }
 
     @Test
     public void testAll() throws Exception {

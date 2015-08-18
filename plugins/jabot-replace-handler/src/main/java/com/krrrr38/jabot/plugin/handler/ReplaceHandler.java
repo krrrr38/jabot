@@ -21,7 +21,7 @@ public class ReplaceHandler extends Handler {
                 "Show registered patterns to replace",
                 "replace patterns",
                 false,
-                strings -> {
+                strings -> brainGuard(() -> {
                     Map<String, String> patterns = getAll();
                     if (patterns.isEmpty()) {
                         send("No registry replace patterns");
@@ -33,7 +33,7 @@ public class ReplaceHandler extends Handler {
                         send(header + message);
                     }
                     return Optional.empty();
-                }
+                })
         );
     }
 
@@ -44,14 +44,14 @@ public class ReplaceHandler extends Handler {
                 "Delete replace pattern with key",
                 "delete pattern <key>",
                 false,
-                strings -> {
+                strings -> brainGuard(() -> {
                     if (delete(strings[0].trim())) {
                         send("Deleted");
                     } else {
                         send("NotFound");
                     }
                     return Optional.empty();
-                }
+                })
         );
     }
 
@@ -62,14 +62,14 @@ public class ReplaceHandler extends Handler {
                 "Delete all replace patterns",
                 "delete all patterns",
                 false,
-                strings -> {
+                strings -> brainGuard(() -> {
                     if (clear()) {
                         send("Deleted all patterns");
                     } else {
                         send("Failed to clear patterns");
                     }
                     return Optional.empty();
-                }
+                })
         );
     }
 
@@ -80,7 +80,7 @@ public class ReplaceHandler extends Handler {
                 "Register replace pattern",
                 "replace <from> with <to>",
                 false,
-                strings -> {
+                strings -> brainGuard(() -> {
                     String from = strings[0];
                     String to = strings[1];
                     if (store(from, to)) {
@@ -89,7 +89,7 @@ public class ReplaceHandler extends Handler {
                         send(String.format("Failed to registry pattern: %s → %s", from, to));
                     }
                     return Optional.empty();
-                }
+                })
         );
     }
 
@@ -100,13 +100,13 @@ public class ReplaceHandler extends Handler {
                 "Reply your message based on registered patterns",
                 "*",
                 false,
-                strings -> {
+                strings -> brainGuard(() -> {
                     String message = strings[0];
                     for (Map.Entry<String, String> entry : getAll().entrySet()) {
                         message = message.replace(entry.getKey(), entry.getValue());
                     }
                     return Optional.of(message);
-                }
+                })
         );
     }
 

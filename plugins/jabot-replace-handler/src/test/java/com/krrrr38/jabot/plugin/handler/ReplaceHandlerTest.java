@@ -1,13 +1,11 @@
 package com.krrrr38.jabot.plugin.handler;
 
 import com.krrrr38.jabot.plugin.brain.Brain;
+import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.hamcrest.Matchers.containsString;
@@ -19,9 +17,11 @@ public class ReplaceHandlerTest {
     private Handler handler;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
+        Brain brain = new MockInmemoryBrain();
+        brain.setup("jabot", Collections.emptyMap());
         handler = new ReplaceHandler();
-        handler.setup("replace-handler", new MockInmemoryBrain(), queue::add, null);
+        handler.setup("replace-handler", brain, queue::add, null);
     }
 
     @Test
@@ -57,34 +57,48 @@ public class ReplaceHandlerTest {
         assertThat(queue.peekLast(), containsString("No registry replace patterns"));
     }
 
+    @Test
+    public void testReceiveBrainException() throws Exception {
+        assertThat("If raise BrainException, return empty not to pass next handler", handler.receive("replace raise with exception"), is(Optional.empty()));
+        assertThat(queue.peekLast(), containsString("raise error"));
+    }
+
     static class MockInmemoryBrain extends Brain {
-        private Map<String, String> brain = new ConcurrentHashMap<>();
+        private Map<String, String> brain;
 
         @Override
-        public Map<String, String> getAll(String namespace) {
+        protected void build(Map<String, String> options) throws JabotBrainException {
+            brain = new ConcurrentHashMap<>();
+        }
+
+        @Override
+        public Map<String, String> getAll(String namespace) throws JabotBrainException {
             return brain;
         }
 
         @Override
-        public Optional<String> get(String namespace, String key) {
+        public Optional<String> get(String namespace, String key) throws JabotBrainException {
             return Optional.ofNullable(brain.get(key));
         }
 
         @Override
-        public boolean store(String namespace, String key, String value) {
+        public boolean store(String namespace, String key, String value) throws JabotBrainException {
+            if (key.equals("raise") && value.equals("exception")) {
+                throw new JabotBrainException("raise error");
+            }
             brain.put(key, value);
             return true;
         }
 
         @Override
-        public boolean store(String namespace, String key1, String value1, String key2, String value2) {
+        public boolean store(String namespace, String key1, String value1, String key2, String value2) throws JabotBrainException {
             brain.put(key1, value1);
             brain.put(key2, value2);
             return true;
         }
 
         @Override
-        public boolean store(String namespace, String key1, String value1, String key2, String value2, String key3, String value3) {
+        public boolean store(String namespace, String key1, String value1, String key2, String value2, String key3, String value3) throws JabotBrainException {
             brain.put(key1, value1);
             brain.put(key2, value2);
             brain.put(key3, value3);
@@ -92,24 +106,24 @@ public class ReplaceHandlerTest {
         }
 
         @Override
-        public boolean storeAll(String namespace, Map<String, String> keyvalues) {
+        public boolean storeAll(String namespace, Map<String, String> keyvalues) throws JabotBrainException {
             brain.putAll(keyvalues);
             return true;
         }
 
         @Override
-        public boolean delete(String namespace, String key) {
+        public boolean delete(String namespace, String key) throws JabotBrainException {
             return brain.remove(key) != null;
         }
 
         @Override
-        public boolean clear(String namespace) {
+        public boolean clear(String namespace) throws JabotBrainException {
             brain = new ConcurrentHashMap<>();
             return true;
         }
 
         @Override
-        public boolean isStored(String namespace, String key) {
+        public boolean isStored(String namespace, String key) throws JabotBrainException {
             return brain.containsKey(key);
         }
     }

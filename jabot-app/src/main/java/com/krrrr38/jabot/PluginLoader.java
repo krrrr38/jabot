@@ -6,6 +6,7 @@ import com.krrrr38.jabot.plugin.Plugin;
 import com.krrrr38.jabot.plugin.adapter.Adapter;
 import com.krrrr38.jabot.plugin.brain.Brain;
 import com.krrrr38.jabot.plugin.brain.InmemoryBrain;
+import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 import com.krrrr38.jabot.plugin.handler.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +21,14 @@ public class PluginLoader {
     /**
      * load plugins into context
      *
-     * @param JabotConfig
+     * @param jabotConfig
      * @param context
      */
-    public static void load(JabotConfig JabotConfig, JabotContext context) {
+    public static void load(JabotConfig jabotConfig, JabotContext context) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Adapter adapter = loadAdapter(classLoader, JabotConfig.getAdapterConfig(), JabotConfig.getName(), context::receive);
-        Brain brain = loadBrain(classLoader, JabotConfig.getBrainConfig());
-        List<Handler> handlers = loadHandlers(classLoader, JabotConfig.getHandlers(), brain, context::send);
+        Adapter adapter = loadAdapter(classLoader, jabotConfig.getAdapterConfig(), jabotConfig.getName(), context::receive);
+        Brain brain = loadBrain(classLoader, jabotConfig.getBrainConfig(), jabotConfig.getName());
+        List<Handler> handlers = loadHandlers(classLoader, jabotConfig.getHandlers(), brain, context::send);
 
         // after registring hook
         handlers.forEach(handler -> handler.afterRegister(handlers));
@@ -51,19 +52,25 @@ public class PluginLoader {
     }
 
     // fallback with inmemory brain
-    private static Brain loadBrain(ClassLoader classLoader, PluginConfig config) {
+    private static Brain loadBrain(ClassLoader classLoader, PluginConfig config, String botName) {
         if (config == null) {
             logger.warn("No brain definition. Fallback to inmemory brain.");
             return getDefaultInmemoryBrain();
         }
 
         logger.info("Load brain plugin: {}", config.getPlugin());
-        return with(() -> {
+        Brain brain = with(() -> {
             return (Brain) classLoader.loadClass(config.getPlugin()).newInstance();
         }, e -> {
             logger.warn("Failed to load brain plugin. Fallback to inmemory brain.", e);
             return getDefaultInmemoryBrain();
         });
+        try {
+            brain.setup(botName, config.getOptions());
+        } catch (JabotBrainException e) {
+            throw new RuntimeException(e);
+        }
+        return brain;
     }
 
     private static List<Handler> loadHandlers(ClassLoader classLoader, List<PluginConfig> configs, Brain brain, Consumer<String> sender) {

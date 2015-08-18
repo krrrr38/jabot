@@ -2,6 +2,7 @@ package com.krrrr38.jabot.plugin.handler;
 
 import com.krrrr38.jabot.plugin.brain.Brain;
 import com.krrrr38.jabot.plugin.brain.EmptyBrain;
+import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,7 +44,9 @@ public class HandlerTest {
             public void afterRegister(List<Handler> handlers) {
             }
         };
-        handler.setup(MOCK_BRAIN_NAMESPACE, new MockMemoryBrain(), queue::add, new HashMap<>());
+        Brain brain = new MockMemoryBrain();
+        brain.setup("jabot", Collections.emptyMap());
+        handler.setup(MOCK_BRAIN_NAMESPACE, brain, queue::add, new HashMap<>());
 
         // fixture;
         mockBrain.put("foo", "bar");
@@ -138,7 +141,12 @@ public class HandlerTest {
     }
 
     class MockMemoryBrain extends Brain {
-        Map<String, String> brain = new ConcurrentHashMap<>();
+        Map<String, String> brain;
+
+        @Override
+        protected void build(Map<String, String> options) throws JabotBrainException {
+            brain = new ConcurrentHashMap<>();
+        }
 
         @Override
         public Map<String, String> getAll(String namespace) {
