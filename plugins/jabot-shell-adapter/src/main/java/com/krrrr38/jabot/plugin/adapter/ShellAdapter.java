@@ -17,7 +17,7 @@ public class ShellAdapter extends Adapter {
 
     @Override
     protected void build(Map<String, String> options) {
-        prompt = options.getOrDefault(OPTIONS_PROMPT, DEFAULT_PROMPT);
+        prompt = optionString(options, OPTIONS_PROMPT, DEFAULT_PROMPT);
         scanner = new Scanner(System.in);
     }
 

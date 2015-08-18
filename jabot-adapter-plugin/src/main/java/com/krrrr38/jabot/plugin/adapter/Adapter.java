@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
 
-abstract public class Adapter implements Plugin {
+abstract public class Adapter extends Plugin {
     private volatile boolean running = false;
 
     private String botName;

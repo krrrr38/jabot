@@ -5,15 +5,16 @@ import com.krrrr38.jabot.plugin.Plugin;
 import java.util.Map;
 import java.util.Optional;
 
-abstract public class Brain implements Plugin {
+abstract public class Brain extends Plugin {
     private String botName;
 
     /**
      * build settings. this method is called once when starting application.
+     *
      * @param botName
      * @param options
      */
-    public void setup(String botName, Map<String, String> options) throws JabotBrainException{
+    public void setup(String botName, Map<String, String> options) throws JabotBrainException {
         if (botName == null || botName.isEmpty()) {
             botName = "jabot";
         }

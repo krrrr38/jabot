@@ -26,8 +26,8 @@ public class SlackAdapter extends Adapter {
     @Override
     protected void build(Map<String, String> options) {
         String botName = getBotName();
-        String token = options.get(OPTIONS_TOKEN);
-        String channelName = options.get(OPTIONS_CHANNEL);
+        String token = requireString(options, OPTIONS_TOKEN);
+        String channelName = requireString(options, OPTIONS_CHANNEL);
         slack = SlackSessionFactory.createWebSocketSlackSession(token);
 
         // connecting

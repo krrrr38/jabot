@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-abstract public class Handler implements Plugin {
+abstract public class Handler extends Plugin {
     private String namespace;
     private Brain brain;
     private Consumer<String> sender;
