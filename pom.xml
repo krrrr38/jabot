@@ -154,6 +154,7 @@
         <module>plugins/jabot-shell-adapter</module>
         <module>plugins/jabot-slack-adapter</module>
         <module>plugins/jabot-inmemory-brain</module>
+        <module>plugins/jabot-redis-brain</module>
         <module>plugins/jabot-ping-handler</module>
         <module>plugins/jabot-help-handler</module>
         <module>plugins/jabot-echo-handler</module>

@@ -11,7 +11,9 @@ delete all patterns
 
 plugins.yml
 ```yml
-handlers:
+handlers: # messages are sent in this order
   - plugin: com.krrrr38.jabot.plugin.handler.ReplaceHandler
     namespace: relpace-handler
 ```
+
+__NOTE__: ReplaceHandler should be put first in handlers to pass replaced message to other handlers.

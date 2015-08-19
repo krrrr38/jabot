@@ -5,13 +5,6 @@ adapter: # require one adapter
   namespace: shell-adapter
   options:
     prompt: "> "
-# If you want to try with slack, remove Shelldapter and enter SlackAdapter
-# adapter: # require one adapter
-#   plugin: com.krrrr38.jabot.plugin.adapter.SlackAdapter
-#   namespace: slack-adapter
-#   options:
-#     token: "access https://slack.com/services/new/bot and enter above name and get token"
-#     channel: "general"
 handlers: # NOTE: messages would be handled by THIS ORDER.
   - plugin: com.krrrr38.jabot.plugin.handler.ReplaceHandler
     namespace: replace-handler
@@ -24,3 +17,31 @@ handlers: # NOTE: messages would be handled by THIS ORDER.
 brain:
   plugin: com.krrrr38.jabot.plugin.brain.InmemoryBrain
   namespace: inmemory-brain
+
+### other plugin examples
+## Adapter
+# adapter: # require one adapter
+#   plugin: com.krrrr38.jabot.plugin.adapter.SlackAdapter
+#   namespace: slack-adapter
+#   options:
+#     token: "access https://slack.com/services/new/bot and enter above name and get token"
+#     channel: "general"
+## Brain
+#brain:
+#  plugin: com.krrrr38.jabot.plugin.brain.RedisBrain
+#  namespace: redis-brain
+#  options: # all options are optional
+#    # redis db settings
+#    host: 127.0.0.1
+#    port: 6379
+#    password: password
+#    connectionTimeout: 2000
+#    socketTimeout: 2000
+#    database: 0
+#    # redis connection pool settings
+#    maxTotal: 8
+#    maxIdle: 8
+#    minIdle: 0
+#    testWhileIdle: true
+#    testOnBorrow: false
+#    testOnReturn: false

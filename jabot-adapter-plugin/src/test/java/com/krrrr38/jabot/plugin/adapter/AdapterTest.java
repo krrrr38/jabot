@@ -59,7 +59,6 @@ public class AdapterTest {
                 e.printStackTrace();
             }
             adapter.stop();
-            assertThat("receive connect message", receiver.getFirst(), is("connect"));
             assertThat("receive messages correctly", receiver.size(), is(greaterThan(1)));
         }).start();
         adapter.listen();

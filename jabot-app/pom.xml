@@ -41,6 +41,11 @@
         </dependency>
         <dependency>
             <groupId>com.krrrr38</groupId>
+            <artifactId>jabot-redis-brain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.krrrr38</groupId>
             <artifactId>jabot-shell-adapter</artifactId>
             <version>${project.version}</version>
         </dependency>
