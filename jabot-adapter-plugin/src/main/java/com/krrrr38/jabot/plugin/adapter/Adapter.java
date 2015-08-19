@@ -13,6 +13,11 @@ abstract public class Adapter extends Plugin {
     private String botName;
     private Consumer<String> receiver;
 
+    /**
+     * @param botName  botname
+     * @param receiver message receiver
+     * @param options  adapter options
+     */
     public void setup(String botName, Consumer<String> receiver, Map<String, String> options) {
         if (botName == null || botName.isEmpty()) {
             botName = "jabot";
@@ -26,6 +31,9 @@ abstract public class Adapter extends Plugin {
         build(options);
     }
 
+    /**
+     * connect and receive messages forever
+     */
     public final void listen() {
         connectAction();
         running = true;
@@ -34,10 +42,16 @@ abstract public class Adapter extends Plugin {
         }
     }
 
+    /**
+     * stop listen infinite loop
+     */
     public final void stop() {
         running = false;
     }
 
+    /**
+     * @return botname
+     */
     protected String getBotName() {
         return botName;
     }
@@ -45,7 +59,7 @@ abstract public class Adapter extends Plugin {
     /**
      * build settings. this method is called once when starting application.
      *
-     * @param options
+     * @param options adapter options
      */
     protected abstract void build(Map<String, String> options);
 

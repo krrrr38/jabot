@@ -33,8 +33,8 @@ abstract public class Handler extends Plugin {
     }
 
     /**
-     * @param message
-     * @return
+     * @param message message
+     * @return next handler message
      */
     public final Optional<String> receive(String message) {
         // foldLeft[B](z: B)(f: (B, A) => B): B
@@ -56,8 +56,8 @@ abstract public class Handler extends Plugin {
     /**
      * build rules. this method is called once when starting application.
      *
-     * @param options
-     * @return
+     * @param options handler options
+     * @return rules
      */
     abstract List<Rule> build(Map<String, String> options);
 
@@ -75,7 +75,7 @@ abstract public class Handler extends Plugin {
     /**
      * send message through adapter
      *
-     * @param message
+     * @param message send message
      */
     protected void send(String message) {
         sender.accept(message);
@@ -84,9 +84,10 @@ abstract public class Handler extends Plugin {
     /**
      * store value into namespace brain
      *
-     * @param key
-     * @param value
-     * @throws JabotBrainException
+     * @param key   store key
+     * @param value store value
+     * @return success or not
+     * @throws JabotBrainException brain exception
      */
     protected boolean store(String key, String value) throws JabotBrainException {
         return brain.store(namespace, key, value);
@@ -95,11 +96,12 @@ abstract public class Handler extends Plugin {
     /**
      * store value into namespace brain
      *
-     * @param key1
-     * @param value1
-     * @param key2
-     * @param value2
-     * @throws JabotBrainException
+     * @param key1   store key1
+     * @param value1 store value1
+     * @param key2   store key2
+     * @param value2 store value2
+     * @return success or not
+     * @throws JabotBrainException brain exception
      */
     protected boolean store(String key1, String value1, String key2, String value2) throws JabotBrainException {
         return brain.store(namespace, key1, value1, key2, value2);
@@ -108,22 +110,23 @@ abstract public class Handler extends Plugin {
     /**
      * store value into namespace brain
      *
-     * @param key1
-     * @param value1
-     * @param key2
-     * @param value2
-     * @param key3
-     * @param value3
-     * @throws JabotBrainException
+     * @param key1   store key1
+     * @param value1 store vanlue1
+     * @param key2   store key2
+     * @param value2 store value2
+     * @param key3   store key3
+     * @param value3 store value3
+     * @return success or not
+     * @throws JabotBrainException brain exception
      */
     protected boolean store(String key1, String value1, String key2, String value2, String key3, String value3) throws JabotBrainException {
         return brain.store(namespace, key1, value1, key2, value2, key3, value3);
     }
 
     /**
-     * @param keyvalues
-     * @return
-     * @throws JabotBrainException
+     * @param keyvalues store keys &amp; values
+     * @return success or not
+     * @throws JabotBrainException brain exception
      */
     protected boolean storeAll(Map<String, String> keyvalues) throws JabotBrainException {
         return brain.storeAll(namespace, keyvalues);
@@ -132,8 +135,8 @@ abstract public class Handler extends Plugin {
     /**
      * get all values from namespace brain
      *
-     * @return
-     * @throws JabotBrainException
+     * @return stored key &amp; values
+     * @throws JabotBrainException brain exception
      */
     protected Map<String, String> getAll() throws JabotBrainException {
         Map<String, String> result = brain.getAll(namespace);
@@ -143,9 +146,9 @@ abstract public class Handler extends Plugin {
     /**
      * get value from namespace brain
      *
-     * @param key
-     * @return
-     * @throws JabotBrainException
+     * @param key store key to get value
+     * @return stored value
+     * @throws JabotBrainException brain exception
      */
     protected Optional<String> get(String key) throws JabotBrainException {
         return brain.get(namespace, key);
@@ -154,9 +157,9 @@ abstract public class Handler extends Plugin {
     /**
      * delete value from namespace brain
      *
-     * @param key
-     * @return
-     * @throws JabotBrainException
+     * @param key store key to delete value
+     * @return success or not
+     * @throws JabotBrainException brain exception
      */
     protected boolean delete(String key) throws JabotBrainException {
         return brain.delete(namespace, key);
@@ -165,8 +168,8 @@ abstract public class Handler extends Plugin {
     /**
      * clear namespace brain values
      *
-     * @return
-     * @throws JabotBrainException
+     * @return success or not
+     * @throws JabotBrainException brain exception
      */
     protected boolean clear() throws JabotBrainException {
         return brain.clear(namespace);
@@ -175,9 +178,9 @@ abstract public class Handler extends Plugin {
     /**
      * check the key is stored in brain
      *
-     * @param key
-     * @return
-     * @throws JabotBrainException
+     * @param key check stored key
+     * @return stored or not
+     * @throws JabotBrainException brain exception
      */
     protected boolean isStored(String key) throws JabotBrainException {
         return brain.isStored(namespace, key);
@@ -185,16 +188,18 @@ abstract public class Handler extends Plugin {
 
     /**
      * guard JabotBrainException. If it raised, post error message and return Optional.empty not to pass next Handler.
-     * <p/>
-     * <code>
+     * <pre>
+     * {@code
      * // rule caller
      * strings -> brainGuard(() -> {
      *   store(strings[0], strings[1])
      *   return Optional.empty();
      * })
-     * </code>
+     * }
+     * </pre>
      *
-     * @return
+     * @param f action with brain processes
+     * @return action result
      */
     protected Optional<String> brainGuard(BrainHandlerAction f) {
         try {

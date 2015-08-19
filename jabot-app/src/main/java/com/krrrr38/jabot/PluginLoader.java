@@ -19,10 +19,10 @@ public class PluginLoader {
     private static final Logger logger = LoggerFactory.getLogger(PluginLoader.class);
 
     /**
-     * load plugins into context
+     * load plugins into context based on config
      *
-     * @param jabotConfig
-     * @param context
+     * @param jabotConfig jabot config
+     * @param context     jabot context which would be
      */
     public static void load(JabotConfig jabotConfig, JabotContext context) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

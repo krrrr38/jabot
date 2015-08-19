@@ -19,7 +19,7 @@ public class PluginConfig {
     /**
      * plugin(adapter/handler/brain) class name with package (required)
      *
-     * @return
+     * @return plugin class name with package
      */
     public String getPlugin() {
         if (plugin == null) {
@@ -35,7 +35,7 @@ public class PluginConfig {
     /**
      * plugin namespace for brain (required)
      *
-     * @return
+     * @return plugin namespace
      */
     public String getNamespace() {
         if (namespace == null) {
@@ -51,7 +51,7 @@ public class PluginConfig {
     /**
      * plugin options (nullable)
      *
-     * @return
+     * @return plugin options
      */
     public Map<String, String> getOptions() {
         return options != null ? options : Collections.emptyMap();

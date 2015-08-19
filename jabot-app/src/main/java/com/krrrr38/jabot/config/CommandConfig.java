@@ -16,7 +16,7 @@ public class CommandConfig {
     /**
      * read yaml to jabotConfig
      *
-     * @return
+     * @return jabot config
      */
     public JabotConfig tojabotConfig() {
         try (InputStream input = new FileInputStream(pluginConfig)) {
