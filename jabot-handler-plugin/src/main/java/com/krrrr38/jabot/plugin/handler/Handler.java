@@ -16,6 +16,11 @@ abstract public class Handler extends Plugin {
     private Consumer<String> sender;
     private volatile List<Rule> rules;
 
+    @Override
+    protected String getNamespace() {
+        return namespace;
+    }
+
     public void setup(String namespace, Brain brain, Consumer<String> sender, Map<String, String> options) {
         if (namespace == null || namespace.isEmpty()) {
             throw new IllegalArgumentException("namespace required");

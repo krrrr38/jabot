@@ -45,7 +45,7 @@ public class HandlerTest {
             }
         };
         Brain brain = new MockMemoryBrain();
-        brain.setup("jabot", Collections.emptyMap());
+        brain.setup("jabot-handler", "jabot", Collections.emptyMap());
         handler.setup(MOCK_BRAIN_NAMESPACE, brain, queue::add, new HashMap<>());
 
         // fixture;

@@ -43,7 +43,7 @@ public class PluginLoader {
         logger.info("Load adapter plugin: {}", config.getPlugin());
         return with(() -> {
             Adapter adapter = (Adapter) classLoader.loadClass(config.getPlugin()).newInstance();
-            adapter.setup(botName, receiver, config.getOptions());
+            adapter.setup(config.getNamespace(), botName, receiver, config.getOptions());
             return adapter;
         }, e -> {
             logger.error(String.format("Failed to load adapter plugin [%s]", config.getPlugin()), e);
@@ -66,7 +66,7 @@ public class PluginLoader {
             return getDefaultInmemoryBrain();
         });
         try {
-            brain.setup(botName, config.getOptions());
+            brain.setup(config.getNamespace(), botName, config.getOptions());
         } catch (JabotBrainException e) {
             throw new RuntimeException(e);
         }

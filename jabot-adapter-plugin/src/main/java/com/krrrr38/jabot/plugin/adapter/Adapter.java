@@ -10,21 +10,29 @@ import java.util.function.Consumer;
 abstract public class Adapter extends Plugin {
     private volatile boolean running = false;
 
+    private String namespace;
     private String botName;
     private Consumer<String> receiver;
 
+    @Override
+    protected String getNamespace() {
+        return namespace;
+    }
+
     /**
-     * @param botName  botname
-     * @param receiver message receiver
-     * @param options  adapter options
+     * @param namespace plugin namespace
+     * @param botName   botname
+     * @param receiver  message receiver
+     * @param options   adapter options
      */
-    public void setup(String botName, Consumer<String> receiver, Map<String, String> options) {
+    public void setup(String namespace, String botName, Consumer<String> receiver, Map<String, String> options) {
         if (botName == null || botName.isEmpty()) {
             botName = "jabot";
         }
         if (receiver == null) {
             throw new IllegalArgumentException("receiver required");
         }
+        this.namespace = namespace;
         this.botName = botName;
         this.receiver = receiver;
 

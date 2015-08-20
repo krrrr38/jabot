@@ -6,7 +6,13 @@ import java.util.Map;
 import java.util.Optional;
 
 abstract public class Brain extends Plugin {
+    private String namespace;
     private String botName;
+
+    @Override
+    protected String getNamespace() {
+        return namespace;
+    }
 
     /**
      * build settings. this method is called once when starting application.
@@ -14,10 +20,11 @@ abstract public class Brain extends Plugin {
      * @param botName botname
      * @param options brain options
      */
-    public void setup(String botName, Map<String, String> options) throws JabotBrainException {
+    public void setup(String namespace, String botName, Map<String, String> options) throws JabotBrainException {
         if (botName == null || botName.isEmpty()) {
             botName = "jabot";
         }
+        this.namespace = namespace;
         this.botName = botName;
 
         build(options);

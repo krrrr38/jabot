@@ -46,7 +46,7 @@ public class AdapterTest {
 
     @Before
     public void setUp() {
-        adapter.setup("jabot", receiver::add, new HashMap<>());
+        adapter.setup("jabot-adapter", "jabot", receiver::add, new HashMap<>());
     }
 
     @Test

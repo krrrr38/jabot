@@ -19,7 +19,7 @@ public class RedisBrainTest {
         options.put("host", "127.0.0.1");
         options.put("port", "6379");
         brain = new RedisBrain();
-        brain.setup("jabot", options);
+        brain.setup("redis-brain", "jabot", options);
     }
 
     @Test

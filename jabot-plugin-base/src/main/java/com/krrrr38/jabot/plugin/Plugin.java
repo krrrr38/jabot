@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 abstract public class Plugin {
     private static final String OPTION_SEPARATOR = ",";
-    private static final String REQUIRE_ERROR_FORMAT = "%s is required option as [%s]";
-    private static final String TYPE_ERROR_FORMAT = "%s is required as [%s]";
+    private static final String REQUIRE_ERROR_FORMAT = "[%s] %s is required option as [%s]";
+    private static final String TYPE_ERROR_FORMAT = "[%s] %s is required as [%s]";
+
+    protected abstract String getNamespace();
 
     ////////////////////////////////////////////////////////////////////////////
     // options utilities
@@ -42,7 +44,15 @@ abstract public class Plugin {
     }
 
     protected boolean requireBoolean(Map<String, String> options, String key) {
-        return require(options, key, "Boolean", Boolean::parseBoolean);
+        String value = options.get(key);
+        if (value == null) {
+            throw new JabotPluginOptionException(String.format(REQUIRE_ERROR_FORMAT, getNamespace(), key, "Boolean"));
+        } else if ("true".equals(value)) {
+            return true;
+        } else if ("false".equals(value)) {
+            return false;
+        }
+        throw new JabotPluginOptionException(String.format(TYPE_ERROR_FORMAT, getNamespace(), key, "Boolean"));
     }
 
     protected List<String> optionStringList(Map<String, String> options, String key, List<String> _default) {
@@ -97,12 +107,12 @@ abstract public class Plugin {
     private <T> T require(Map<String, String> options, String key, String type, ThrowableFunction<String, T> converter) {
         String value = options.get(key);
         if (value == null) {
-            throw new JabotPluginOptionException(String.format(REQUIRE_ERROR_FORMAT, key, type));
+            throw new JabotPluginOptionException(String.format(REQUIRE_ERROR_FORMAT, getNamespace(), key, type));
         } else {
             try {
                 return converter.apply(value);
             } catch (Exception e) {
-                throw new JabotPluginOptionException(String.format(TYPE_ERROR_FORMAT, key, type), e);
+                throw new JabotPluginOptionException(String.format(TYPE_ERROR_FORMAT, getNamespace(), key, type), e);
             }
         }
     }

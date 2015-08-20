@@ -15,7 +15,7 @@ public class InmemoryBrainTest {
     @Before
     public void setUp() throws Exception {
         brain = new InmemoryBrain();
-        brain.setup("jabot", Collections.emptyMap());
+        brain.setup("jabot", "inmemory-brain", Collections.emptyMap());
     }
 
     @Test

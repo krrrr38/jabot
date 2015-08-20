@@ -33,7 +33,7 @@ public class ShellAdapterTest {
         System.setOut(new PrintStream(outContent));
 
         adapter = new ShellAdapter();
-        adapter.setup("jabot", queue::add, new HashMap<>());
+        adapter.setup("shell-adapter", "jabot", queue::add, new HashMap<>());
     }
 
     @After

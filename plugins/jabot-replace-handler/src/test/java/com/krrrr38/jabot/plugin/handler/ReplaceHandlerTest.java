@@ -19,7 +19,7 @@ public class ReplaceHandlerTest {
     @Before
     public void setUp() throws Exception {
         Brain brain = new MockInmemoryBrain();
-        brain.setup("jabot", Collections.emptyMap());
+        brain.setup("replace-handler", "jabot", Collections.emptyMap());
         handler = new ReplaceHandler();
         handler.setup("replace-handler", brain, queue::add, null);
     }
