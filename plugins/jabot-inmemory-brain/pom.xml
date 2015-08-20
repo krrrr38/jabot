@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.krrrr38</groupId>
         <artifactId>jabot</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.1</version>
         <relativePath>../..</relativePath>
     </parent>
     <artifactId>jabot-inmemory-brain</artifactId>
