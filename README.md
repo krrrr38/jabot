@@ -14,9 +14,7 @@ This module is inspired by [Ruboty](https://github.com/r7kamura/ruboty), thank y
 
 ## Usage
 
-Access [Maven Repository](https://oss.sonatype.org/content/repositories/releases/com/krrrr38/jabot-app/) or [Maven Snapshot Repository](https://oss.sonatype.org/content/repositories/snapshots/com/krrrr38/jabot-app/).
-
-Access [Releases Page](https://github.com/krrrr38/jabot/releases/latest)
+Access [Latest Releases Page](https://github.com/krrrr38/jabot/releases/latest)
 
 1. downlaod latest version's `jabot-app-*-executable.zip` and unzip
 2. edit `plugins.yml` to load adapter and handlers
