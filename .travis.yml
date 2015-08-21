@@ -4,3 +4,14 @@ services:
   - redis-server
 jdk:
   - oraclejdk8
+before_deploy:
+  - mvn clean package -DskipTests=true
+deploy:
+  provider: releases
+  api_key:
+    secure: NW1pk3IpavTgLXWO2tsIJ2IfUiT0W/L1fASw1577Gea4uyxgoeODfHDo1CDSnjW8KhlAhuRx/8nGfNAHapKIcaNHjXVljlOsZ4OhkZ7jaj/0Lz6g3DItYvd6QS1PqsezdvsA4JSEc1dHTU0byb0ooVQW5tPf95Z4PE4xadY3keb8onrKhnn4d3AgBLySdieDUEJguR5+4Zkhm1qWI0FM+fKOGSzYYkQhbWo7iKuIDgN5BsJyi0Zq+IjUOYcBL2ARsTs91PLu5A6eqqsqOCn5eLIN0I6MT3SvJ8fSVm75ufE0/78/GbLCK5i1LgxfHHsdgvCEO9F8YucBkI3IqDqisO3C7ZN9KhlXow4PhEkMGBHhljJFQdPv38KA9VWvxNMLp1nS1cYpQzdG5ITfDif+AjVay3wtGFSkFLTfWs4jQZYGSYGkg2dTP59Qljc5K/y5HJ2//Cxa3Y0uuRY8u1XWz55fsy5If8F5fAhc5TqMmAF8IgdjJVNDYuL9bAeikp2Jcxdwl192vv66WI67hL/nNccqJQfPyFPfjPlkwSxSMExXgF+9Y5E2VUS313TA4bv4cN4/e8FIC06FfVe7rPyoNeNZPQmZFgHn/jAQr9iqDfLIhJfO1mcPpvM3c62+jEA+4l1rCjKD7QjDqYjMdqRuMzea2GlzYQKQcUEcysmp2h4=
+  file: jabot-app/target/jabot-app-$TRAVIS_TAG-executable.zip
+  skip_cleanup: true
+  on:
+    repo: krrrr38/jabot
+    tags: true

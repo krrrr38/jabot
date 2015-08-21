@@ -1,7 +1,7 @@
 # Jabot
 
 [![Build Status](https://secure.travis-ci.org/krrrr38/jabot.png)](http://travis-ci.org/krrrr38/jabot)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.krrrr38/jabot/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.krrrr38/jabot)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.krrrr38/jabot/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.krrrr38%22%20jabot)
 [![License: MIT](http://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Java + Bot ⇒ Jabot
@@ -16,7 +16,9 @@ This module is inspired by [Ruboty](https://github.com/r7kamura/ruboty), thank y
 
 Access [Maven Repository](https://oss.sonatype.org/content/repositories/releases/com/krrrr38/jabot-app/) or [Maven Snapshot Repository](https://oss.sonatype.org/content/repositories/snapshots/com/krrrr38/jabot-app/).
 
-1. downlaod latest version's `jabot-app-*-executable.zip` and unzip (or `jabot-app-*-executalbe.tar.gz`)
+Access [Releases Page](https://github.com/krrrr38/jabot/releases/latest)
+
+1. downlaod latest version's `jabot-app-*-executable.zip` and unzip
 2. edit `plugins.yml` to load adapter and handlers
 3. add custom plugin into `lib` directory
 4. `sh bin/jabot` (`-c /path/to/plugins.yml`)
