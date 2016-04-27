@@ -1,16 +1,17 @@
 package com.krrrr38.jabot.plugin;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class PluginTest {
     private static final String NAMESPACE = "mock-plugin";
@@ -40,6 +41,17 @@ public class PluginTest {
     public void testOptionString() throws Exception {
         assertThat(plugin.optionString(options, STRING_KEY, "default"), is("string-value"));
         assertThat(plugin.optionString(options, "invalid", "default"), is("default"));
+        try {
+            // invalid pattern
+            plugin.optionString(options, STRING_KEY, "default", Pattern.compile("invalid-string-value"));
+            fail();
+        } catch (JabotPluginOptionException e) {
+            String message = e.getMessage();
+            assertThat(message, containsString(NAMESPACE));
+            assertThat(message, containsString("invalid-string-value"));
+        }
+        assertThat(plugin.optionString(options, STRING_KEY, "default", Pattern.compile("strin.*alue")),
+                   is("string-value"));
     }
 
     @Test
@@ -54,6 +66,19 @@ public class PluginTest {
             assertThat(message, containsString(NAMESPACE));
             assertThat(message, containsString("String"));
         }
+        try {
+            // invalid pattern
+            assertThat(plugin.requireString(options, STRING_KEY, Pattern.compile("invalid-string-value")),
+                       is("string-value"));
+            fail();
+        } catch (JabotPluginOptionException e) {
+            String message = e.getMessage();
+            assertThat(message, containsString(NAMESPACE));
+            assertThat(message, containsString("invalid-string-value"));
+        }
+        assertThat(plugin.requireString(options, STRING_KEY, Pattern.compile("strin.*alue")),
+                   is("string-value"));
+
     }
 
     @Test
@@ -145,8 +170,10 @@ public class PluginTest {
 
     @Test
     public void testOptionStringList() throws Exception {
-        assertThat(plugin.optionStringList(options, STRING_LIST_KEY, Arrays.asList("v1", "v2")), is(Arrays.asList("value1", "value2")));
-        assertThat(plugin.optionStringList(options, "invalid", Arrays.asList("v1", "v2")), is(Arrays.asList("v1", "v2")));
+        assertThat(plugin.optionStringList(options, STRING_LIST_KEY, Arrays.asList("v1", "v2")),
+                   is(Arrays.asList("value1", "value2")));
+        assertThat(plugin.optionStringList(options, "invalid", Arrays.asList("v1", "v2")),
+                   is(Arrays.asList("v1", "v2")));
     }
 
     @Test
@@ -165,8 +192,10 @@ public class PluginTest {
 
     @Test
     public void testOptionIntegerList() throws Exception {
-        assertThat(plugin.optionIntegerList(options, INTEGER_LIST_KEY, Arrays.asList(800, 900)), is(Arrays.asList(100, 200)));
-        assertThat(plugin.optionIntegerList(options, "invalid", Arrays.asList(800, 900)), is(Arrays.asList(800, 900)));
+        assertThat(plugin.optionIntegerList(options, INTEGER_LIST_KEY, Arrays.asList(800, 900)),
+                   is(Arrays.asList(100, 200)));
+        assertThat(plugin.optionIntegerList(options, "invalid", Arrays.asList(800, 900)),
+                   is(Arrays.asList(800, 900)));
     }
 
     @Test
@@ -194,8 +223,10 @@ public class PluginTest {
 
     @Test
     public void testOptionLongList() throws Exception {
-        assertThat(plugin.optionLongList(options, LONG_LIST_KEY, Arrays.asList(800L, 900L)), is(Arrays.asList(100L, 200L)));
-        assertThat(plugin.optionLongList(options, "invalid", Arrays.asList(800L, 900L)), is(Arrays.asList(800L, 900L)));
+        assertThat(plugin.optionLongList(options, LONG_LIST_KEY, Arrays.asList(800L, 900L)),
+                   is(Arrays.asList(100L, 200L)));
+        assertThat(plugin.optionLongList(options, "invalid", Arrays.asList(800L, 900L)),
+                   is(Arrays.asList(800L, 900L)));
     }
 
     @Test
