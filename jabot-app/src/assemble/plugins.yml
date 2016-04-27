@@ -26,6 +26,15 @@ brain:
 #   options:
 #     token: "access https://slack.com/services/new/bot and enter above name and get token"
 #     channel: "general"
+# adapter: # require one adapter
+#   plugin: com.krrrr38.jabot.plugin.adapter.HipChatAdapter
+#   namespace: hipchat-adapter
+#   options:
+#     postUrl: https://your.hipchat.com/v2/room/859000/notification?auth_token=cccaBQvNEvn9mp14bbbnjSy5SIZTGADBI4BN1aaa
+#     messageColor: red
+#     messageNotify: false
+#     webhookPort: 4000
+#     slashCommand: "/jabot"
 ## Brain
 #brain:
 #  plugin: com.krrrr38.jabot.plugin.brain.RedisBrain

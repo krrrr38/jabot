@@ -56,6 +56,11 @@
         </dependency>
         <dependency>
             <groupId>com.krrrr38</groupId>
+            <artifactId>jabot-hipchat-adapter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.krrrr38</groupId>
             <artifactId>jabot-ping-handler</artifactId>
             <version>${project.version}</version>
         </dependency>

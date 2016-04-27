@@ -3,12 +3,14 @@ package com.krrrr38.jabot.plugin;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 abstract public class Plugin {
     private static final String OPTION_SEPARATOR = ",";
     private static final String REQUIRE_ERROR_FORMAT = "[%s] %s is required option as [%s]";
     private static final String TYPE_ERROR_FORMAT = "[%s] %s is required as [%s]";
+    private static final String PATTERN_ERROR_FORMAT = "[%s] %s is matched with pattern: %s";
 
     protected abstract String getNamespace();
 
@@ -19,8 +21,24 @@ abstract public class Plugin {
         return option(options, key, "String", _default, ThrowableFunction.<String>identity());
     }
 
+    protected String optionString(Map<String, String> options, String key, String _default, Pattern allowPattern) {
+        String result = option(options, key, "String", _default, ThrowableFunction.<String>identity());
+        if (!allowPattern.matcher(result).matches()) {
+            throw new JabotPluginOptionException(String.format(PATTERN_ERROR_FORMAT, getNamespace(), key, allowPattern.toString()));
+        }
+        return result;
+    }
+
     protected String requireString(Map<String, String> options, String key) {
         return require(options, key, "String", ThrowableFunction.<String>identity());
+    }
+
+    protected String requireString(Map<String, String> options, String key, Pattern allowPattern) {
+        String result = require(options, key, "String", ThrowableFunction.<String>identity());
+        if (!allowPattern.matcher(result).matches()) {
+            throw new JabotPluginOptionException(String.format(PATTERN_ERROR_FORMAT, getNamespace(), key, allowPattern.toString()));
+        }
+        return result;
     }
 
     protected Integer optionInteger(Map<String, String> options, String key, Integer _default) {
