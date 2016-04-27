@@ -13,7 +13,7 @@ package: clean
 	$(MAVEN) package
 
 install: clean
-	$(MAVEN) install -DskipTests=true -Dgpg.skip=true
+	$(MAVEN) install -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true
 
 run: install
 	$(MAVEN) exec:java -pl $(APP_MODULE) -Dexec.mainClass=$(MAIN_CLASS) -Dexec.args="-c $(PLUGIN_FILE)"
@@ -24,4 +24,4 @@ test: clean
 clean:
 	$(MAVEN) clean
 
-.PHONY: release release-prepare github package install run test clean
+.PHONY: release deploy package install run test clean
