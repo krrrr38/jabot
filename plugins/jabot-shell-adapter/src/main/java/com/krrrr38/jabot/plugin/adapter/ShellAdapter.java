@@ -8,9 +8,9 @@ public class ShellAdapter extends Adapter {
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_CYAN = "\u001B[36m";
 
-    private final String OPTIONS_PROMPT = "prompt";
-    private final String DEFAULT_PROMPT = ANSI_YELLOW + "> " + ANSI_RESET;
-    private final String EXIT_COMMAND = "exit";
+    private static final String OPTIONS_PROMPT = "prompt";
+    private static final String DEFAULT_PROMPT = ANSI_YELLOW + "> " + ANSI_RESET;
+    private static final String EXIT_COMMAND = "exit";
 
     private String prompt;
     private Scanner scanner;

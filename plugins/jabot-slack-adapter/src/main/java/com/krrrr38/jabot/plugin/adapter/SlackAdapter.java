@@ -1,27 +1,28 @@
 package com.krrrr38.jabot.plugin.adapter;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackPersona;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
+
 public class SlackAdapter extends Adapter {
     private static final Logger logger = LoggerFactory.getLogger(SlackAdapter.class);
+
+    private static final String OPTIONS_TOKEN = "token";
+    private static final String OPTIONS_CHANNEL = "channel";
 
     private SlackSession slack;
     private SlackChannel slackChannel;
     private Queue<String> queue = new ConcurrentLinkedQueue<>();
-
-    private final String OPTIONS_TOKEN = "token";
-    private final String OPTIONS_CHANNEL = "channel";
 
     @Override
     protected void build(Map<String, String> options) {

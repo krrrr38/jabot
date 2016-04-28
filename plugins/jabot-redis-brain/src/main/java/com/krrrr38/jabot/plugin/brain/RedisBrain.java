@@ -1,33 +1,34 @@
 package com.krrrr38.jabot.plugin.brain;
 
+import java.util.Map;
+import java.util.Optional;
+
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
-import java.util.Map;
-import java.util.Optional;
-
 public class RedisBrain extends Brain {
 
     // basic db settings
-    private final String OPTIONS_DB_HOST = "host";
-    private final String OPTIONS_DB_PORT = "port";
-    private final String OPTIONS_DB_PASSWORD = "password";
-    private final String OPTIONS_DB_CONECTION_TIMEOUT = "connectionTimeout";
-    private final String OPTIONS_DB_SOCKET_TIMEOUT = "socketTimeout";
-    private final String OPTIONS_DB_DATABASE = "database";
-    private final String OPTIONS_DB_CLIENT_NAME = "clientName";
+    private static final String OPTIONS_DB_HOST = "host";
+    private static final String OPTIONS_DB_PORT = "port";
+    private static final String OPTIONS_DB_PASSWORD = "password";
+    private static final String OPTIONS_DB_CONECTION_TIMEOUT = "connectionTimeout";
+    private static final String OPTIONS_DB_SOCKET_TIMEOUT = "socketTimeout";
+    private static final String OPTIONS_DB_DATABASE = "database";
+    private static final String OPTIONS_DB_CLIENT_NAME = "clientName";
     // pool settings
-    private final String OPTIONS_POOL_MAX_TOTAL = "maxTotal";
-    private final String OPTIONS_POOL_MAX_IDLE = "maxIdle";
-    private final String OPTIONS_POOL_MIN_IDLE = "minIdle";
-    private final String OPTIONS_POOL_TEST_WHILE_IDLE = "testWhileIdle";
-    private final String OPTIONS_POOL_TEST_ON_BORROW = "testOnBorrow";
-    private final String OPTIONS_POOL_TEST_ON_CREATE = "testOnCreate";
-    private final String OPTIONS_POOL_TEST_ON_RETURN = "testOnReturn";
+    private static final String OPTIONS_POOL_MAX_TOTAL = "maxTotal";
+    private static final String OPTIONS_POOL_MAX_IDLE = "maxIdle";
+    private static final String OPTIONS_POOL_MIN_IDLE = "minIdle";
+    private static final String OPTIONS_POOL_TEST_WHILE_IDLE = "testWhileIdle";
+    private static final String OPTIONS_POOL_TEST_ON_BORROW = "testOnBorrow";
+    private static final String OPTIONS_POOL_TEST_ON_CREATE = "testOnCreate";
+    private static final String OPTIONS_POOL_TEST_ON_RETURN = "testOnReturn";
 
     private JedisPool pool;
 
