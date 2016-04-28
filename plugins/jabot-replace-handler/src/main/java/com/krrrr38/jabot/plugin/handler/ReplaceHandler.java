@@ -25,7 +25,7 @@ public class ReplaceHandler extends Handler {
                 strings -> brainGuard(() -> {
                     Map<String, String> patterns = getAll();
                     if (patterns.isEmpty()) {
-                        send("No registry replace patterns");
+                        send("No registered replace patterns");
                     } else {
                         String header = "=== Replace Patterns ===\n";
                         String message = patterns.entrySet().stream().map(e -> {
