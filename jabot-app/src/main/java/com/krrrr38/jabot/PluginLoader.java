@@ -1,5 +1,12 @@
 package com.krrrr38.jabot;
 
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.krrrr38.jabot.config.JabotConfig;
 import com.krrrr38.jabot.config.PluginConfig;
 import com.krrrr38.jabot.plugin.Plugin;
@@ -8,12 +15,6 @@ import com.krrrr38.jabot.plugin.brain.Brain;
 import com.krrrr38.jabot.plugin.brain.InmemoryBrain;
 import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 import com.krrrr38.jabot.plugin.handler.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class PluginLoader {
     private static final Logger logger = LoggerFactory.getLogger(PluginLoader.class);
@@ -26,8 +27,8 @@ public class PluginLoader {
      */
     public static void load(JabotConfig jabotConfig, JabotContext context) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Adapter adapter = loadAdapter(classLoader, jabotConfig.getAdapterConfig(), jabotConfig.getName(), context::receive);
-        Brain brain = loadBrain(classLoader, jabotConfig.getBrainConfig(), jabotConfig.getName());
+        Adapter adapter = loadAdapter(classLoader, jabotConfig.getAdapter(), jabotConfig.getName(), context::receive);
+        Brain brain = loadBrain(classLoader, jabotConfig.getBrain(), jabotConfig.getName());
         List<Handler> handlers = loadHandlers(classLoader, jabotConfig.getHandlers(), brain, context::send);
 
         // after registring hook

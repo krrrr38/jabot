@@ -5,12 +5,15 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.Value;
+
+@Value
 public class Rule {
     private Pattern pattern;
     private String name;
     private String description;
     private String usage;
-    private boolean isHidden = false;
+    private boolean hidden;
     private Function<String[], Optional<String>> caller;
 
     /**
@@ -20,10 +23,10 @@ public class Rule {
      * @param name        handler name
      * @param description rule description
      * @param usage       rule usage
-     * @param isHidden    if true, hide from help command
+     * @param hidden    if true, hide from help command
      * @param caller      if pattern match, call this. Next rule or handler will use return value. If empty, they wil not be called.
      */
-    public Rule(Pattern pattern, String name, String description, String usage, boolean isHidden, Function<String[], Optional<String>> caller) {
+    public Rule(Pattern pattern, String name, String description, String usage, boolean hidden, Function<String[], Optional<String>> caller) {
         if (pattern == null) {
             throw new IllegalArgumentException("pattern required");
         }
@@ -44,28 +47,8 @@ public class Rule {
         this.name = name;
         this.description = description;
         this.usage = usage;
-        this.isHidden = isHidden;
+        this.hidden = hidden;
         this.caller = caller;
-    }
-
-    public Pattern getPattern() {
-        return pattern;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getUsage() {
-        return usage;
-    }
-
-    public boolean isHidden() {
-        return isHidden;
     }
 
     public Optional<String> apply(String message) {
@@ -80,39 +63,5 @@ public class Rule {
         } else {
             return Optional.of(message);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Rule{" +
-                "pattern=" + pattern +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", usage='" + usage + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Rule)) return false;
-
-        Rule rule = (Rule) o;
-
-        if (isHidden != rule.isHidden) return false;
-        if (!pattern.equals(rule.pattern)) return false;
-        if (!name.equals(rule.name)) return false;
-        if (!description.equals(rule.description)) return false;
-        return usage.equals(rule.usage);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = pattern.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + usage.hashCode();
-        result = 31 * result + (isHidden ? 1 : 0);
-        return result;
     }
 }

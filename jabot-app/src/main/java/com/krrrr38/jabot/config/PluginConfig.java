@@ -3,6 +3,11 @@ package com.krrrr38.jabot.config;
 import java.util.Collections;
 import java.util.Map;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@ToString
+@EqualsAndHashCode
 public class PluginConfig {
     private String plugin;
     private String namespace;
@@ -59,35 +64,5 @@ public class PluginConfig {
 
     public void setOptions(Map<String, String> options) {
         this.options = options;
-    }
-
-    @Override
-    public String toString() {
-        return "PluginConfig{" +
-                "plugin='" + plugin + '\'' +
-                ", namespace='" + namespace + '\'' +
-                ", options=" + options +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PluginConfig)) return false;
-
-        PluginConfig that = (PluginConfig) o;
-
-        if (!plugin.equals(that.plugin)) return false;
-        if (!namespace.equals(that.namespace)) return false;
-        return !(options != null ? !options.equals(that.options) : that.options != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = plugin.hashCode();
-        result = 31 * result + namespace.hashCode();
-        result = 31 * result + (options != null ? options.hashCode() : 0);
-        return result;
     }
 }

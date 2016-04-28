@@ -1,6 +1,9 @@
 package com.krrrr38.jabot.config;
 
-import org.junit.Test;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -8,8 +11,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 public class CommandConfigTest {
     private CommandConfig commandConfig = new CommandConfig();
@@ -17,14 +19,14 @@ public class CommandConfigTest {
     @Test
     public void testTojabotConfig() throws Exception {
         setConfigFile(commandConfig, "valid.yml");
-        JabotConfig JabotConfig = commandConfig.tojabotConfig();
+        JabotConfig jabotConfig = commandConfig.tojabotConfig();
 
         // name
-        assertThat(JabotConfig.getName(), is("jabot"));
+        assertThat(jabotConfig.getName(), is("jabot"));
 
         // adapter
-        assertThat(JabotConfig.getAdapterConfig(), is(notNullValue()));
-        PluginConfig adapter = JabotConfig.getAdapterConfig();
+        assertThat(jabotConfig.getAdapter(), is(notNullValue()));
+        PluginConfig adapter = jabotConfig.getAdapter();
         assertThat(adapter, is(notNullValue()));
         assertThat(adapter.getPlugin(), is("com.krrrr38.jabot.adapter.ShellAdapter"));
         assertThat(adapter.getNamespace(), is("shell-adapter"));
@@ -32,7 +34,7 @@ public class CommandConfigTest {
         assertThat(adapter.getOptions().get("foo"), is("bar"));
 
         // handlers
-        List<PluginConfig> handlers = JabotConfig.getHandlers();
+        List<PluginConfig> handlers = jabotConfig.getHandlers();
         assertThat(handlers, is(notNullValue()));
         assertThat(handlers.size(), is(2));
         assertThat(handlers.get(0).getPlugin(), is("com.krrrr38.jabot.handler.PingHandler"));
@@ -40,7 +42,7 @@ public class CommandConfigTest {
         assertThat(handlers.get(0).getOptions(), is(Collections.emptyMap()));
 
         // brain
-        PluginConfig brain = JabotConfig.getBrainConfig();
+        PluginConfig brain = jabotConfig.getBrain();
         assertThat(brain, is(nullValue()));
     }
 
