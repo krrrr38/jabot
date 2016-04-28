@@ -7,11 +7,13 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 public final class PingHandler extends Handler {
+    private static final String HANDLER_NAME = "ping";
+
     @Override
     List<Rule> build(Map<String, String> options) {
         Rule pingRule = new Rule(
                 Pattern.compile("\\Aping\\z", Pattern.CASE_INSENSITIVE),
-                "ping",
+                HANDLER_NAME,
                 "Return PONG to PING",
                 "ping",
                 false,

@@ -9,13 +9,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class HelpHandler extends Handler {
+    private static final String HANDLER_NAME = "help";
     private List<Handler> handlers;
 
     @Override
     List<Rule> build(Map<String, String> options) {
         Rule helpRule = new Rule(
                 Pattern.compile("\\Ahelp(?: me)?(?: (.+))?\\z", Pattern.CASE_INSENSITIVE),
-                "help",
+                HANDLER_NAME,
                 "Show help messages",
                 "help <name>",
                 false,

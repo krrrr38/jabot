@@ -17,7 +17,7 @@ public class Rule {
      * Handler Rule
      *
      * @param pattern     message pattern. pattern groups would be nullable string to caller arguments.
-     * @param name        rule name
+     * @param name        handler name
      * @param description rule description
      * @param usage       rule usage
      * @param isHidden    if true, hide from help command

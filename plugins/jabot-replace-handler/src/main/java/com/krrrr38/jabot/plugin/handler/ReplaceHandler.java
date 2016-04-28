@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ReplaceHandler extends Handler {
+    private static final String HANDLER_NAME = "replace";
 
     @Override
     List<Rule> build(Map<String, String> options) {
@@ -17,7 +18,7 @@ public class ReplaceHandler extends Handler {
     private Rule listRule() {
         return new Rule(
                 Pattern.compile("\\Alist patterns\\z", Pattern.CASE_INSENSITIVE),
-                "list patterns",
+                HANDLER_NAME,
                 "Show registered patterns to replace",
                 "replace patterns",
                 false,
@@ -40,7 +41,7 @@ public class ReplaceHandler extends Handler {
     private Rule deleteRule() {
         return new Rule(
                 Pattern.compile("\\Adelete pattern (.+)\\z", Pattern.CASE_INSENSITIVE),
-                "delete replate pattern",
+                HANDLER_NAME,
                 "Delete replace pattern with key",
                 "delete pattern <key>",
                 false,
@@ -58,7 +59,7 @@ public class ReplaceHandler extends Handler {
     private Rule deleteAllRule() {
         return new Rule(
                 Pattern.compile("\\Adelete all patterns\\z", Pattern.CASE_INSENSITIVE),
-                "delete all replace patterns",
+                HANDLER_NAME,
                 "Delete all replace patterns",
                 "delete all patterns",
                 false,
@@ -76,7 +77,7 @@ public class ReplaceHandler extends Handler {
     private Rule registerRule() {
         return new Rule(
                 Pattern.compile("\\Areplace (.+) with (.+)\\z", Pattern.CASE_INSENSITIVE),
-                "register replace pattern",
+                HANDLER_NAME,
                 "Register replace pattern",
                 "replace <from> with <to>",
                 false,
@@ -96,7 +97,7 @@ public class ReplaceHandler extends Handler {
     private Rule replaceRule() {
         return new Rule(
                 Pattern.compile("\\A(.+)\\z"),
-                "replace all message",
+                HANDLER_NAME,
                 "Reply your message based on registered patterns",
                 "*",
                 false,
