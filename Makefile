@@ -18,10 +18,13 @@ install: clean
 run: install
 	$(MAVEN) exec:java -pl $(APP_MODULE) -Dexec.mainClass=$(MAIN_CLASS) -Dexec.args="-c $(PLUGIN_FILE)"
 
+rerun:
+	$(MAVEN) exec:java -pl $(APP_MODULE) -Dexec.mainClass=$(MAIN_CLASS) -Dexec.args="-c $(PLUGIN_FILE)"
+
 test: clean
 	$(MAVEN) test
 
 clean:
 	$(MAVEN) clean
 
-.PHONY: release deploy package install run test clean
+.PHONY: release deploy package install run rerun test clean

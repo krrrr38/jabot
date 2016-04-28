@@ -9,27 +9,11 @@
     <artifactId>jabot-adapter-plugin</artifactId>
     <name>jabot-adapter-plugin</name>
 
-    <properties>
-        <slf4j.version>1.7.12</slf4j.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.krrrr38</groupId>
             <artifactId>jabot-plugin-base</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-            <!--<scope>provided</scope>-->
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-            <!--<scope>provided</scope>-->
         </dependency>
     </dependencies>
 </project>
