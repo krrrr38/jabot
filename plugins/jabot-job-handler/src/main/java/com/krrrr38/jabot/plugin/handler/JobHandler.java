@@ -108,7 +108,7 @@ public class JobHandler extends Handler {
                     false,
                     (sender, strings) -> brainGuard(() -> {
                         int index = Integer.parseInt(strings[0]);
-                        if (jobs.size() <= index) {
+                        if (index < 0 || jobs.size() <= index) {
                             send(new SendMessage("No such job: " + index + ", max index is " + (jobs.size() - 1)));
                             return Optional.empty();
                         }

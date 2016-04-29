@@ -66,6 +66,11 @@
         </dependency>
         <dependency>
             <groupId>com.krrrr38</groupId>
+            <artifactId>jabot-task-handler</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.krrrr38</groupId>
             <artifactId>jabot-job-handler</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -1,16 +1,24 @@
 package com.krrrr38.jabot.plugin.handler;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 import com.krrrr38.jabot.plugin.message.SendMessage;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ReplaceHandler extends Handler {
     private static final String HANDLER_NAME = "replace";
+
+    private Map<String, String> patterns = new ConcurrentHashMap<>();
 
     @Override
     List<Rule> buildRules(Map<String, String> options) {
@@ -47,10 +55,13 @@ public class ReplaceHandler extends Handler {
                     "delete pattern <key>",
                     false,
                     (sender, strings) -> brainGuard(() -> {
-                        if (delete(strings[0].trim())) {
-                            send(new SendMessage("Deleted"));
+                        String fromPattern = strings[0].trim();
+                        String toPattern = patterns.remove(fromPattern);
+                        if (toPattern != null) {
+                            delete(fromPattern);
+                            send(new SendMessage(String.format("Deleted: %s → %s", fromPattern, toPattern)));
                         } else {
-                            send(new SendMessage("NotFound"));
+                            send(new SendMessage("No such pattern"));
                         }
                         return Optional.empty();
                     })
@@ -66,6 +77,7 @@ public class ReplaceHandler extends Handler {
                     (sender, strings) -> brainGuard(() -> {
                         if (clear()) {
                             send(new SendMessage("Deleted all patterns"));
+                            patterns = new ConcurrentHashMap<>();
                         } else {
                             send(new SendMessage("Failed to clear patterns"));
                         }
@@ -84,6 +96,7 @@ public class ReplaceHandler extends Handler {
                         String from = strings[0];
                         String to = strings[1];
                         if (store(from, to)) {
+                            patterns.put(from, to);
                             send(new SendMessage(String.format("Registered pattern: %s → %s", from, to)));
                         } else {
                             send(new SendMessage(
@@ -102,7 +115,7 @@ public class ReplaceHandler extends Handler {
                     false,
                     (sender, strings) -> brainGuard(() -> {
                         String message = strings[0];
-                        for (Map.Entry<String, String> entry : getAll().entrySet()) {
+                        for (Map.Entry<String, String> entry : patterns.entrySet()) {
                             message = message.replace(entry.getKey(), entry.getValue());
                         }
                         return Optional.of(message);
@@ -111,6 +124,12 @@ public class ReplaceHandler extends Handler {
 
     @Override
     public void afterSetup(Map<String, String> options) {
+        try {
+            patterns = Collections.synchronizedMap(getAll());
+        } catch (JabotBrainException e) {
+            log.error("Failed to load patterns: " + e.getMessage(), e);
+            patterns = new ConcurrentHashMap<>();
+        }
     }
 
     @Override

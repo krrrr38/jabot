@@ -4,8 +4,8 @@ Schedule message management handler.
 
 ```sh
 list jobs
-add job "<cron syntax>" <message> 
-delete job <id>
+add job "<cron syntax>" <message>
+delete job <index:\\d+>
 ```
 
 plugins.yml
