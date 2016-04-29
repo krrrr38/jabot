@@ -1,13 +1,13 @@
 package com.krrrr38.jabot.plugin.handler;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Before;
+import org.junit.Test;
 
 public class RuleTest {
     private Rule rule;
@@ -20,7 +20,7 @@ public class RuleTest {
                 "sample description",
                 "sample usage",
                 false,
-                groups -> {
+                (sender, groups) -> {
                     return Optional.of("converted");
                 }
         );
@@ -53,7 +53,7 @@ public class RuleTest {
 
     @Test
     public void testApply() throws Exception {
-        assertThat("not applied", rule.apply("foo"), is(Optional.of("foo")));
-        assertThat("applied", rule.apply("sample"), is(Optional.of("converted")));
+        assertThat("not applied", rule.apply(null, "foo"), is(Optional.of("foo")));
+        assertThat("applied", rule.apply(null, "sample"), is(Optional.of("converted")));
     }
 }

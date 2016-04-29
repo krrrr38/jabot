@@ -2,6 +2,7 @@ MAVEN := mvn
 APP_MODULE := jabot-app
 MAIN_CLASS := com.krrrr38.jabot.JabotRunner
 PLUGIN_FILE := jabot-app/src/assemble/plugins.yml
+# PLUGIN_FILE := myplugins.yml
 
 release: clean
 	$(MAVEN) release:clean release:prepare release:perform

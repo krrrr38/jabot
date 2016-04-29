@@ -1,13 +1,11 @@
 package com.krrrr38.jabot;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.krrrr38.jabot.config.JabotConfig;
 
-public class Jabot {
-    private static final Logger logger = LoggerFactory.getLogger(Jabot.class);
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+public class Jabot {
     private final JabotContext context;
 
     private Jabot(JabotContext context) {
@@ -15,7 +13,7 @@ public class Jabot {
     }
 
     public static Jabot init(JabotConfig jabotConfig) {
-        logger.debug("Initialize application");
+        log.debug("Initialize application");
         JabotContext context = new JabotContext();
         PluginLoader.load(jabotConfig, context);
         return new Jabot(context);

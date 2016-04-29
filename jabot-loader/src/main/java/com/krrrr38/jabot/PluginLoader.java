@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.krrrr38.jabot.config.JabotConfig;
 import com.krrrr38.jabot.config.PluginConfig;
 import com.krrrr38.jabot.plugin.Plugin;
@@ -15,9 +12,13 @@ import com.krrrr38.jabot.plugin.brain.Brain;
 import com.krrrr38.jabot.plugin.brain.InmemoryBrain;
 import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 import com.krrrr38.jabot.plugin.handler.Handler;
+import com.krrrr38.jabot.plugin.message.ReceiveMessage;
+import com.krrrr38.jabot.plugin.message.SendMessage;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class PluginLoader {
-    private static final Logger logger = LoggerFactory.getLogger(PluginLoader.class);
 
     /**
      * load plugins into context based on config
@@ -40,15 +41,15 @@ public class PluginLoader {
     }
 
     private static Adapter loadAdapter(
-            ClassLoader classLoader, PluginConfig config, String botName, Consumer<String> receiver
+            ClassLoader classLoader, PluginConfig config, String botName, Consumer<ReceiveMessage> receiver
     ) {
-        logger.info("Load adapter plugin: {}", config.getPlugin());
+        log.info("Load adapter plugin: {}", config.getPlugin());
         return with(() -> {
             Adapter adapter = (Adapter) classLoader.loadClass(config.getPlugin()).newInstance();
             adapter.setup(config.getNamespace(), botName, receiver, config.getOptions());
             return adapter;
         }, e -> {
-            logger.error(String.format("Failed to load adapter plugin [%s]", config.getPlugin()), e);
+            log.error(String.format("Failed to load adapter plugin [%s]", config.getPlugin()), e);
             throw e; // no fallback
         });
     }
@@ -56,15 +57,15 @@ public class PluginLoader {
     // fallback with inmemory brain
     private static Brain loadBrain(ClassLoader classLoader, PluginConfig config, String botName) {
         if (config == null) {
-            logger.warn("No brain definition. Fallback to inmemory brain.");
+            log.warn("No brain definition. Fallback to inmemory brain.");
             return getDefaultInmemoryBrain();
         }
 
-        logger.info("Load brain plugin: {}", config.getPlugin());
+        log.info("Load brain plugin: {}", config.getPlugin());
         Brain brain = with(() -> {
             return (Brain) classLoader.loadClass(config.getPlugin()).newInstance();
         }, e -> {
-            logger.warn("Failed to load brain plugin. Fallback to inmemory brain.", e);
+            log.warn("Failed to load brain plugin. Fallback to inmemory brain.", e);
             return getDefaultInmemoryBrain();
         });
         try {
@@ -75,14 +76,14 @@ public class PluginLoader {
         return brain;
     }
 
-    private static List<Handler> loadHandlers(ClassLoader classLoader, List<PluginConfig> configs, Brain brain, Consumer<String> sender) {
+    private static List<Handler> loadHandlers(ClassLoader classLoader, List<PluginConfig> configs, Brain brain, Consumer<SendMessage> sender) {
         return configs.stream().map(config -> with(() -> {
-            logger.info("Load handler plugin: {}", config.getPlugin());
+            log.info("Load handler plugin: {}", config.getPlugin());
             Handler handler = (Handler) classLoader.loadClass(config.getPlugin()).newInstance();
             handler.setup(config.getNamespace(), brain, sender, config.getOptions());
             return handler;
         }, e -> {
-            logger.error(String.format("Failed to load handler plugin [%s]", config.getPlugin()), e);
+            log.error(String.format("Failed to load handler plugin [%s]", config.getPlugin()), e);
             throw e; // no fallback
         })).collect(Collectors.toList());
     }

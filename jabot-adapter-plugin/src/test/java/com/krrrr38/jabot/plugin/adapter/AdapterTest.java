@@ -12,9 +12,13 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.krrrr38.jabot.plugin.message.ReceiveMessage;
+import com.krrrr38.jabot.plugin.message.SendMessage;
+import com.krrrr38.jabot.plugin.message.Sender;
+
 public class AdapterTest {
-    private Deque<String> receiver = new ArrayDeque<>();
-    private Deque<String> sender = new ArrayDeque<>();
+    private Deque<ReceiveMessage> receiver = new ArrayDeque<>();
+    private Deque<SendMessage> sender = new ArrayDeque<>();
 
     private Adapter adapter = new Adapter() {
         private int counter = 0;
@@ -28,23 +32,23 @@ public class AdapterTest {
         }
 
         @Override
-        public String receive() {
+        public ReceiveMessage receive() {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return "value = " + counter++;
+            return new ReceiveMessage(new Sender("id", "mid", "name", "email"), "value = " + counter++);
         }
 
         @Override
-        public void post(String message) {
-            sender.add(message);
+        public void post(SendMessage sendMessage) {
+            sender.add(sendMessage);
         }
 
         @Override
         public void connectAction() {
-            post("connect");
+            post(new SendMessage("connect"));
         }
     };
 

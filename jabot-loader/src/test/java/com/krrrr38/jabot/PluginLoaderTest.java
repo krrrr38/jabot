@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.krrrr38.jabot.config.JabotConfig;
 import com.krrrr38.jabot.config.PluginConfig;
 import com.krrrr38.jabot.mock.MockAdapter;
+import com.krrrr38.jabot.plugin.message.SendMessage;
 
 public class PluginLoaderTest {
 
@@ -36,10 +37,10 @@ public class PluginLoaderTest {
 
         // when load successfully
         PluginLoader.load(config, context);
-        context.send("message");
+        context.send(new SendMessage("message", null));
 
         // then
-        assertThat(MockAdapter.queue.peekLast(), is("message"));
+        assertThat(MockAdapter.queue.peekLast().getMessage(), is("message"));
     }
 
     @Test

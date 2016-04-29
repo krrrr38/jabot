@@ -1,9 +1,11 @@
 package com.krrrr38.jabot.plugin.handler;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.krrrr38.jabot.plugin.message.Sender;
 
 import lombok.Value;
 
@@ -14,23 +16,30 @@ public class Rule {
     private String description;
     private String usage;
     private boolean hidden;
-    private Function<String[], Optional<String>> caller;
+    private BiFunction<Sender, String[], Optional<String>> caller;
 
     /**
      * Handler Rule
      *
      * @param pattern     message pattern. pattern groups would be nullable string to caller arguments.
-     * @param name        handler name
+     * @param handlerName handler name
      * @param description rule description
      * @param usage       rule usage
-     * @param hidden    if true, hide from help command
-     * @param caller      if pattern match, call this. Next rule or handler will use return value. If empty, they wil not be called.
+     * @param hidden      if true, hide from help command
+     * @param caller      if pattern match, call this. return value is used from following rules or handlers. If empty, following them are not called.
      */
-    public Rule(Pattern pattern, String name, String description, String usage, boolean hidden, Function<String[], Optional<String>> caller) {
+    public Rule(
+            Pattern pattern,
+            String handlerName,
+            String description,
+            String usage,
+            boolean hidden,
+            BiFunction<Sender, String[], Optional<String>> caller
+    ) {
         if (pattern == null) {
             throw new IllegalArgumentException("pattern required");
         }
-        if (name == null) {
+        if (handlerName == null) {
             throw new IllegalArgumentException("name required");
         }
         if (description == null) {
@@ -44,14 +53,14 @@ public class Rule {
         }
 
         this.pattern = pattern;
-        this.name = name;
+        this.name = handlerName;
         this.description = description;
         this.usage = usage;
         this.hidden = hidden;
         this.caller = caller;
     }
 
-    public Optional<String> apply(String message) {
+    public Optional<String> apply(Sender sender, String message) {
         Matcher matcher = pattern.matcher(message);
         if (matcher.matches()) {
             int groupCount = matcher.groupCount();
@@ -59,7 +68,7 @@ public class Rule {
             for (int i = 0; i < groupCount; i++) {
                 args[i] = matcher.group(i + 1);
             }
-            return caller.apply(args);
+            return caller.apply(sender, args);
         } else {
             return Optional.of(message);
         }
