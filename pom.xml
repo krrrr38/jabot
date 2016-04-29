@@ -187,6 +187,7 @@
         <module>plugins/jabot-echo-handler</module>
         <module>plugins/jabot-replace-handler</module>
         <module>plugins/jabot-task-handler</module>
+        <module>plugins/jabot-memo-handler</module>
         <module>plugins/jabot-job-handler</module>
     </modules>
 </project>

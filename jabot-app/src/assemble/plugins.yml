@@ -10,6 +10,8 @@ handlers: # NOTE: messages would be handled by THIS ORDER.
     namespace: replace-handler
   - plugin: com.krrrr38.jabot.plugin.handler.TaskHandler
     namespace: task-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.MemoHandler
+    namespace: memo-handler
   - plugin: com.krrrr38.jabot.plugin.handler.JobHandler
     namespace: job-handler
   - plugin: com.krrrr38.jabot.plugin.handler.HelpHandler

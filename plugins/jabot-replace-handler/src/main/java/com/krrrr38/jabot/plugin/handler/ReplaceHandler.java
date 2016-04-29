@@ -87,7 +87,7 @@ public class ReplaceHandler extends Handler {
 
     private Rule REGISTER_RULE =
             new Rule(
-                    Pattern.compile("\\Areplace (.+) with (.+)\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Areplace (.+?) with (.+)\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Register replace pattern",
                     "replace <from> with <to>",
