@@ -5,24 +5,27 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.krrrr38.jabot.plugin.message.ReceiveMessage;
+import com.krrrr38.jabot.plugin.message.SendMessage;
+import com.krrrr38.jabot.plugin.message.Sender;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
+import com.ullink.slack.simpleslackapi.impl.SlackChatConfiguration;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 
-public class SlackAdapter extends Adapter {
-    private static final Logger logger = LoggerFactory.getLogger(SlackAdapter.class);
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+public class SlackAdapter extends Adapter {
     private static final String OPTIONS_TOKEN = "token";
     private static final String OPTIONS_CHANNEL = "channel";
 
     private SlackSession slack;
     private SlackChannel slackChannel;
-    private Queue<String> queue = new ConcurrentLinkedQueue<>();
+    private SlackChatConfiguration slackChatConfiguration;
+    private Queue<ReceiveMessage> queue = new ConcurrentLinkedQueue<>();
 
     @Override
     public void afterSetup(Map<String, String> options) {
@@ -33,7 +36,7 @@ public class SlackAdapter extends Adapter {
 
         // connecting
         try {
-            logger.info("Connect to channel: {}", channelName);
+            log.info("Connect to channel: {}", channelName);
             slack.connect();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -48,19 +51,25 @@ public class SlackAdapter extends Adapter {
                             .findFirst()
                             .map(SlackPersona::getId)
                             .orElseThrow(() -> {
-                                String message = String.format("Cannot find target bot: %s\nPlease set `same` name with plugins.yml name and slack Customize name.", botName);
+                                String message = String.format(
+                                        "Cannot find target bot: %s\nPlease set `same` name with plugins.yml "
+                                        + "name and slack Customize name.",
+                                        botName);
                                 return new RuntimeException(message);
                             });
-        logger.info("Found Slack bot: {}", botId);
+        log.info("Found Slack bot: {}", botId);
 
         // register listener
         slack.addMessagePostedListener((slackMessagePosted, slackSession) -> {
-            logger.debug("Received Slack Message: {}", slackMessagePosted);
-            String message = slackMessagePosted.getMessageContent().trim();
+            log.debug("Received Slack Message: {}", slackMessagePosted);
+            String receivedMessage = slackMessagePosted.getMessageContent().trim();
             if (channelName.equals(slackMessagePosted.getChannel().getName())
-                && isBotMention(message, botName, botId)
+                && isBotMention(receivedMessage, botName, botId)
                 && !isSelfMessage(slackMessagePosted.getSender(), botId)) {
-                queue.add(omitBotInfo(message, botName, botId));
+                final SlackUser sender = slackMessagePosted.getSender();
+                queue.add(new ReceiveMessage(
+                        new Sender(sender.getId(), sender.getUserName(), sender.getUserName(), sender.getUserMail()),
+                        omitBotInfo(receivedMessage, botName, botId)));
             }
         });
     }
@@ -92,7 +101,7 @@ public class SlackAdapter extends Adapter {
     }
 
     @Override
-    public String receive() {
+    public ReceiveMessage receive() {
         while (true) {
             synchronized (queue) {
                 if (!queue.isEmpty()) {
@@ -103,12 +112,16 @@ public class SlackAdapter extends Adapter {
     }
 
     @Override
-    public void post(String message) {
+    public void post(SendMessage sendMessage) {
+        String replyMessage = sendMessage.getReplyId() != null
+                              ? String.format("<@%s> ", sendMessage.getReplyId())
+                              : "";
+        String message = replyMessage + sendMessage.getMessage();
         slack.sendMessage(slackChannel, message, null);
     }
 
     @Override
     public void connectAction() {
-        post("Hello!!");
+        post(new SendMessage("Hello!!"));
     }
 }

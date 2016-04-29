@@ -3,6 +3,9 @@ package com.krrrr38.jabot.plugin.adapter;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.krrrr38.jabot.plugin.message.ReceiveMessage;
+import com.krrrr38.jabot.plugin.message.SendMessage;
+
 public class ShellAdapter extends Adapter {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -27,23 +30,23 @@ public class ShellAdapter extends Adapter {
     }
 
     @Override
-    public String receive() {
+    public ReceiveMessage receive() {
         post(prompt, false);
         String line = scanner.nextLine().trim();
         if (EXIT_COMMAND.equals(line)) {
             stop();
         }
-        return line;
+        return new ReceiveMessage(null, line);
     }
 
     @Override
-    public void post(String message) {
-        post(String.format("%s[%s]\n%s%s", ANSI_CYAN, getBotName(), message, ANSI_RESET), true);
+    public void post(SendMessage sendMessage) {
+        post(String.format("%s[%s]\n%s%s", ANSI_CYAN, getBotName(), sendMessage.getMessage(), ANSI_RESET), true);
     }
 
     @Override
     public void connectAction() {
-        post("Welcome!! (type `exit` to interrupt)");
+        post(new SendMessage("Welcome!! (type `exit` to interrupt)"));
     }
 
     private void post(String message, boolean withBreakLine) {

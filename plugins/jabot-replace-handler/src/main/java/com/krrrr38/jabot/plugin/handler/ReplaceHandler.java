@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.krrrr38.jabot.plugin.message.SendMessage;
+
 public class ReplaceHandler extends Handler {
     private static final String HANDLER_NAME = "replace";
 
@@ -22,16 +24,16 @@ public class ReplaceHandler extends Handler {
                     "Show registered patterns to replace",
                     "replace patterns",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         Map<String, String> patterns = getAll();
                         if (patterns.isEmpty()) {
-                            send("No registered replace patterns");
+                            send(new SendMessage("No registered replace patterns"));
                         } else {
                             String header = "=== Replace Patterns ===\n";
                             String message = patterns.entrySet().stream().map(e -> {
                                 return String.format("%s → %s", e.getKey(), e.getValue());
                             }).collect(Collectors.joining("\n"));
-                            send(header + message);
+                            send(new SendMessage(header + message));
                         }
                         return Optional.empty();
                     })
@@ -44,11 +46,11 @@ public class ReplaceHandler extends Handler {
                     "Delete replace pattern with key",
                     "delete pattern <key>",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         if (delete(strings[0].trim())) {
-                            send("Deleted");
+                            send(new SendMessage("Deleted"));
                         } else {
-                            send("NotFound");
+                            send(new SendMessage("NotFound"));
                         }
                         return Optional.empty();
                     })
@@ -61,11 +63,11 @@ public class ReplaceHandler extends Handler {
                     "Delete all replace patterns",
                     "delete all patterns",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         if (clear()) {
-                            send("Deleted all patterns");
+                            send(new SendMessage("Deleted all patterns"));
                         } else {
-                            send("Failed to clear patterns");
+                            send(new SendMessage("Failed to clear patterns"));
                         }
                         return Optional.empty();
                     })
@@ -78,13 +80,14 @@ public class ReplaceHandler extends Handler {
                     "Register replace pattern",
                     "replace <from> with <to>",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         String from = strings[0];
                         String to = strings[1];
                         if (store(from, to)) {
-                            send(String.format("Registered pattern: %s → %s", from, to));
+                            send(new SendMessage(String.format("Registered pattern: %s → %s", from, to)));
                         } else {
-                            send(String.format("Failed to registry pattern: %s → %s", from, to));
+                            send(new SendMessage(
+                                    String.format("Failed to registry pattern: %s → %s", from, to)));
                         }
                         return Optional.empty();
                     })
@@ -97,7 +100,7 @@ public class ReplaceHandler extends Handler {
                     "Reply your message based on registered patterns",
                     "*",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         String message = strings[0];
                         for (Map.Entry<String, String> entry : getAll().entrySet()) {
                             message = message.replace(entry.getKey(), entry.getValue());

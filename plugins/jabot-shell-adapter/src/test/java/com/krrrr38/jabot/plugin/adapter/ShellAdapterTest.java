@@ -1,9 +1,8 @@
 package com.krrrr38.jabot.plugin.adapter;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,9 +12,13 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import com.krrrr38.jabot.plugin.message.ReceiveMessage;
+import com.krrrr38.jabot.plugin.message.SendMessage;
 
 public class ShellAdapterTest {
     // catch System.in & System.out
@@ -24,7 +27,7 @@ public class ShellAdapterTest {
     private ByteArrayInputStream inContent;
     private InputStream tmpInput;
     private Adapter adapter;
-    private Deque<String> queue = new ArrayDeque<>();
+    private Deque<ReceiveMessage> queue = new ArrayDeque<>();
 
     @Before
     public void setUp() throws Exception {
@@ -64,7 +67,7 @@ public class ShellAdapterTest {
 
     @Test
     public void testPost() throws Exception {
-        adapter.post("Hello");
+        adapter.post(new SendMessage("Hello"));
         assertThat(outContent.toString(), containsString("Hello"));
     }
 }
