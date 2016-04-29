@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import com.krrrr38.jabot.plugin.message.SendMessage;
+
 public final class PingHandler extends Handler {
     private static final String HANDLER_NAME = "ping";
 
@@ -22,13 +24,12 @@ public final class PingHandler extends Handler {
                     "Return PONG to PING",
                     "ping",
                     false,
-                    strings -> {
+                    (sender, strings) -> {
                         // strings are groupings of regex pattern.
                         // the values are nullable.
 
                         // send "PONG" message
-                        send("PONG");
-
+                        send(new SendMessage("PONG"));
                         // If return Optional.empty, following handlers will be never called.
                         return Optional.empty();
                     }

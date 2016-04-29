@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
@@ -22,23 +21,24 @@ import org.junit.Test;
 
 import com.krrrr38.jabot.plugin.brain.Brain;
 import com.krrrr38.jabot.plugin.brain.EmptyBrain;
+import com.krrrr38.jabot.plugin.message.SendMessage;
 
 public class HandlerTest {
     private static final String MOCK_BRAIN_NAMESPACE = "namespace";
-    private Deque<String> queue = new ArrayDeque<>();
-    private Map<String, String> mockBrain = new HashMap();
+    private Deque<SendMessage> queue = new ArrayDeque<>();
+    private Map<String, String> mockBrain = new HashMap<>();
     private Handler handler;
 
     @Before
     public void setUp() throws Exception {
-        List<Rule> rules = Arrays.asList(
+        List<Rule> rules = Collections.singletonList(
                 new Rule(
                         Pattern.compile("sample"),
                         "sample",
                         "sample description",
                         "sample usage",
                         false,
-                        groups -> {
+                        (sender, groups) -> {
                             return Optional.of("converted");
                         }
                 )
@@ -94,14 +94,14 @@ public class HandlerTest {
             handler.setup("a", new EmptyBrain(), null, null);
             fail();
         } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), containsString("sender required"));
+            assertThat(e.getMessage(), containsString("messageSender required"));
         }
     }
 
     @Test
     public void testReceive() throws Exception {
-        assertThat("no catch", handler.receive("foo"), is(Optional.of("foo")));
-        assertThat("catch success", handler.receive("sample"), is(Optional.of("converted")));
+        assertThat("no catch", handler.receive(null, "foo"), is(Optional.of("foo")));
+        assertThat("catch success", handler.receive(null, "sample"), is(Optional.of("converted")));
     }
 
     @Test
@@ -112,9 +112,9 @@ public class HandlerTest {
     @Test
     public void testSend() throws Exception {
         assertThat(queue.isEmpty(), is(true));
-        handler.send("message");
+        handler.send(new SendMessage("message"));
         assertThat(queue.size(), is(1));
-        assertThat(queue.peekLast(), containsString("message"));
+        assertThat(queue.peekLast().getMessage(), containsString("message"));
     }
 
     ///////////////////////////////////////////////////////////////////

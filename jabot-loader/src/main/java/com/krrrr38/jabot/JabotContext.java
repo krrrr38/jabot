@@ -3,44 +3,46 @@ package com.krrrr38.jabot;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.krrrr38.jabot.plugin.adapter.Adapter;
 import com.krrrr38.jabot.plugin.brain.Brain;
 import com.krrrr38.jabot.plugin.handler.Handler;
+import com.krrrr38.jabot.plugin.message.ReceiveMessage;
+import com.krrrr38.jabot.plugin.message.SendMessage;
+import com.krrrr38.jabot.plugin.message.Sender;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class JabotContext {
-    private static final Logger logger = LoggerFactory.getLogger(JabotContext.class);
-
     private Brain brain;
     private Adapter adapter;
     private List<Handler> handlers;
 
-    public void send(String message) {
-        logger.debug("Send message: {}", message);
+    public void send(SendMessage message) {
+        log.debug("Send message: {}", message);
         adapter.post(message);
     }
 
-    public void receive(String message) {
-        logger.debug("Receive message: {}", message);
+    public void receive(ReceiveMessage receiveMessage) {
+        log.debug("Receive message: {}", receiveMessage);
+        Sender sender = receiveMessage.getSender();
         handlers.stream()
-                .reduce(Optional.of(message),
-                        (maybeMessage, handler) -> maybeMessage.flatMap(handler::receive),
+                .reduce(Optional.of(receiveMessage.getMessage()),
+                        (maybeMessage, handler) -> maybeMessage
+                                .flatMap(message -> handler.receive(sender, message)),
                         (s, s2) -> Optional.empty()); // should not be called parallel
     }
 
     public void listenAdapter() {
-        logger.info("Start application");
+        log.info("Start application");
         adapter.listen();
         destroy();
     }
 
     public void destroy() {
-        logger.info("Stop application");
+        log.info("Stop application");
         adapter.beforeDestroy();
         handlers.forEach(Handler::beforeDestroy);
         brain.beforeDestroy();

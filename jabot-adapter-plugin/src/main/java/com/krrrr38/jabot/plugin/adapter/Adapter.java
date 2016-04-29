@@ -6,13 +6,15 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.krrrr38.jabot.plugin.Plugin;
+import com.krrrr38.jabot.plugin.message.SendMessage;
+import com.krrrr38.jabot.plugin.message.ReceiveMessage;
 
 abstract public class Adapter extends Plugin {
     private volatile boolean running = false;
 
     private String namespace;
     private String botName;
-    private Consumer<String> receiver;
+    private Consumer<ReceiveMessage> receiver;
 
     @Override
     protected String getNamespace() {
@@ -25,7 +27,7 @@ abstract public class Adapter extends Plugin {
      * @param receiver  message receiver
      * @param options   adapter options
      */
-    public void setup(String namespace, String botName, Consumer<String> receiver, Map<String, String> options) {
+    public void setup(String namespace, String botName, Consumer<ReceiveMessage> receiver, Map<String, String> options) {
         if (botName == null || botName.isEmpty()) {
             botName = "jabot";
         }
@@ -68,7 +70,7 @@ abstract public class Adapter extends Plugin {
      *
      * @return message
      */
-    abstract public String receive();
+    abstract public ReceiveMessage receive();
 
     /**
      * receive multiple messages.
@@ -76,14 +78,14 @@ abstract public class Adapter extends Plugin {
      *
      * @return messages
      */
-    public Collection<String> receives() {
+    public Collection<ReceiveMessage> receives() {
         return Collections.singletonList(receive());
     }
 
     /**
      * send message
      */
-    abstract public void post(String message);
+    abstract public void post(SendMessage sendMessage);
 
     /**
      * When starting to connect, send message and so on.

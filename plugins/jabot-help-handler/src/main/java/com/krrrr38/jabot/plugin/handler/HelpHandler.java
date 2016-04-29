@@ -4,9 +4,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.krrrr38.jabot.plugin.message.SendMessage;
+import com.krrrr38.jabot.plugin.message.Sender;
 
 public class HelpHandler extends Handler {
     private static final String HANDLER_NAME = "help";
@@ -27,8 +30,8 @@ public class HelpHandler extends Handler {
                     help()
             );
 
-    private Function<String[], Optional<String>> help() {
-        return strings -> {
+    private BiFunction<Sender, String[], Optional<String>> help() {
+        return (sender, strings) -> {
             String ruleName = strings[0];
             if (ruleName == null) {
                 showRules();
@@ -52,9 +55,9 @@ public class HelpHandler extends Handler {
                                          rule.getPattern().pattern()))
                                  .collect(Collectors.joining("\n"));
         if (!message.isEmpty()) {
-            send(message);
+            send(new SendMessage(message));
         } else {
-            send("help: Nothing to match this keyword");
+            send(new SendMessage("help: Nothing to match this keyword"));
         }
     }
 
@@ -65,7 +68,7 @@ public class HelpHandler extends Handler {
                                  .map(rule -> String.format("[%s] %s - %s", rule.getName(), rule.getUsage(),
                                                             rule.getDescription()))
                                  .collect(Collectors.joining("\n"));
-        send(message);
+        send(new SendMessage(message));
     }
 
     @Override

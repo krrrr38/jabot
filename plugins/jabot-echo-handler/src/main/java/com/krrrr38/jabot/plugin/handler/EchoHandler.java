@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import com.krrrr38.jabot.plugin.message.SendMessage;
+
 public class EchoHandler extends Handler {
     private static final String HANDLER_NAME = "echo";
 
@@ -22,9 +24,9 @@ public class EchoHandler extends Handler {
                     "Reply your message",
                     "echo <message>",
                     false,
-                    strings -> {
+                    (sender, strings) -> {
                         // strings are nullable regex grouping
-                        send(strings[0].trim());
+                        send(new SendMessage(strings[0].trim()));
                         // If return Optional.empty, following handlers will be never called.
                         return Optional.empty();
                     }

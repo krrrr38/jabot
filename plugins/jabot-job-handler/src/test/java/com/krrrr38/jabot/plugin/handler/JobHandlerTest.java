@@ -17,9 +17,10 @@ import org.junit.Test;
 
 import com.krrrr38.jabot.plugin.brain.Brain;
 import com.krrrr38.jabot.plugin.brain.JabotBrainException;
+import com.krrrr38.jabot.plugin.message.SendMessage;
 
 public class JobHandlerTest {
-    private Deque<String> queue = new ArrayDeque<>();
+    private Deque<SendMessage> queue = new ArrayDeque<>();
     private Handler handler;
 
     @Before
@@ -33,47 +34,48 @@ public class JobHandlerTest {
 
     @Test
     public void testReceive() throws Exception {
-        assertThat("`foo` is not caught", handler.receive("foo"), is(Optional.of("foo")));
+        assertThat("`foo` is not caught", handler.receive(null, "foo"), is(Optional.of("foo")));
         assertThat(queue.isEmpty(), is(true));
 
-        assertThat(handler.receive("list jobs"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("No registered jobs"));
+        assertThat(handler.receive(null, "list jobs"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("No registered jobs"));
 
-        assertThat(handler.receive("add job \"* * a * *\" invalid cron syntax"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("Failed to register job"));
+        assertThat(handler.receive(null, "add job \"* * a * *\" invalid cron syntax"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("Failed to register job"));
 
-        assertThat(handler.receive("add job \"1-5 * * * *\" test-message1"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("Register new job"));
-        assertThat(handler.receive("add job \"*/5 * * * *\" test-message2"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("Register new job"));
+        assertThat(handler.receive(null, "add job \"1-5 * * * *\" test-message1"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("Register new job"));
+        assertThat(handler.receive(null, "add job \"*/5 * * * *\" test-message2"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("Register new job"));
 
-        assertThat(handler.receive("delete job 2"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("No such job"));
+        assertThat(handler.receive(null, "delete job 2"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("No such job"));
 
-        assertThat(handler.receive("delete job 1"), is(Optional.empty()));
-        String deletedMessage = queue.peekLast();
+        assertThat(handler.receive(null, "delete job 1"), is(Optional.empty()));
+        String deletedMessage = queue.peekLast().getMessage();
         assertThat(deletedMessage, containsString("Deleted job"));
         assertThat(deletedMessage, containsString("test-message2"));
 
-        assertThat(handler.receive("list jobs"), is(Optional.empty()));
-        String listMessage = queue.peekLast();
+        assertThat(handler.receive(null, "list jobs"), is(Optional.empty()));
+        String listMessage = queue.peekLast().getMessage();
         assertThat("job stored correctly", listMessage, containsString("test-message1"));
         assertThat("job deleted correctly", listMessage, not(containsString("test-message2")));
 
-        assertThat(handler.receive("delete all jobs"), is(Optional.empty()));
-        assertThat("jobs deleted correctly", queue.peekLast(), containsString("Deleted all jobs"));
+        assertThat(handler.receive(null, "delete all jobs"), is(Optional.empty()));
+        assertThat("jobs deleted correctly", queue.peekLast().getMessage(), containsString("Deleted all jobs"));
 
-        assertThat("nothing to be applied", handler.receive("test foo piyo"), is(Optional.of("test foo piyo")));
+        assertThat("nothing to be applied", handler.receive(null, "test foo piyo"),
+                   is(Optional.of("test foo piyo")));
 
-        assertThat(handler.receive("list jobs"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("No registered jobs"));
+        assertThat(handler.receive(null, "list jobs"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("No registered jobs"));
     }
 
     @Test
     public void testReceiveBrainException() throws Exception {
         assertThat("If raise BrainException, return empty not to pass next handler",
-                   handler.receive("add job \"* * * * *\" raise brain exception"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("raise error"));
+                   handler.receive(null, "add job \"* * * * *\" raise brain exception"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("raise error"));
     }
 
     static class MockInmemoryBrain extends Brain {

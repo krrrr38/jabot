@@ -10,17 +10,16 @@ import java.util.StringJoiner;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.krrrr38.jabot.plugin.brain.JabotBrainException;
+import com.krrrr38.jabot.plugin.message.SendMessage;
 
 import it.sauronsoftware.cron4j.InvalidPatternException;
 import it.sauronsoftware.cron4j.Scheduler;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JobHandler extends Handler {
-    private static final Logger logger = LoggerFactory.getLogger(JobHandler.class);
     private static final String HANDLER_NAME = "job";
 
     private final Scheduler scheduler = new Scheduler();
@@ -38,9 +37,9 @@ public class JobHandler extends Handler {
                     "Show registered jobs",
                     "list jobs",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         if (jobs.isEmpty()) {
-                            send("No registered jobs");
+                            send(new SendMessage("No registered jobs"));
                         } else {
                             String header = "=== Job List ===\n";
                             StringJoiner sj = new StringJoiner("\n");
@@ -48,7 +47,7 @@ public class JobHandler extends Handler {
                                 Job job = jobs.get(i);
                                 sj.add(String.format("[%d] %s %s", i, job.getCronSyntax(), job.getMessage()));
                             }
-                            send(header + sj.toString());
+                            send(new SendMessage(header + sj.toString()));
                         }
                         return Optional.empty();
                     })
@@ -61,19 +60,19 @@ public class JobHandler extends Handler {
                     "Register new job",
                     "add job \"<cron syntax>\" <message>",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         String cronSyntax = strings[0];
                         String message = strings[1];
                         try {
                             String scheduledId = scheduler.schedule(cronSyntax, () -> {
-                                send(message);
+                                send(new SendMessage(message));
                             });
                             Job job = new Job(scheduledId, cronSyntax, message);
                             store(scheduledId, job.getStoredData());
                             jobs.add(job);
-                            send(String.format("Register new job [%d]", jobs.size()));
+                            send(new SendMessage(String.format("Register new job [%d]", jobs.size())));
                         } catch (InvalidPatternException e) {
-                            send("Failed to register job: " + e.getMessage());
+                            send(new SendMessage("Failed to register job: " + e.getMessage()));
                         }
                         return Optional.empty();
                     })
@@ -86,15 +85,15 @@ public class JobHandler extends Handler {
                     "Delete all jobs",
                     "delete all jobs",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         if (clear()) {
                             jobs.forEach(job -> {
                                 scheduler.deschedule(job.getScheduledId());
                             });
                             jobs = Collections.synchronizedList(new ArrayList<>());
-                            send("Deleted all jobs");
+                            send(new SendMessage("Deleted all jobs"));
                         } else {
-                            send("Failed to delete jobs");
+                            send(new SendMessage("Failed to delete jobs"));
                         }
                         return Optional.empty();
                     })
@@ -107,16 +106,16 @@ public class JobHandler extends Handler {
                     "Delete job by index",
                     "delete job <index:\\d+>",
                     false,
-                    strings -> brainGuard(() -> {
+                    (sender, strings) -> brainGuard(() -> {
                         int index = Integer.parseInt(strings[0]);
                         if (jobs.size() <= index) {
-                            send("No such job: " + index + ", max index is " + (jobs.size() - 1));
+                            send(new SendMessage("No such job: " + index + ", max index is " + (jobs.size() - 1)));
                             return Optional.empty();
                         }
                         Job job = jobs.remove(index);
                         scheduler.deschedule(job.getScheduledId());
                         delete(job.getScheduledId());
-                        send(String.format("Deleted job: [%s] %s %s", index, job.getCronSyntax(), job.getMessage()));
+                        send(new SendMessage(String.format("Deleted job: [%s] %s %s", index, job.getCronSyntax(), job.getMessage())));
                         return Optional.empty();
                     })
             );
@@ -131,13 +130,13 @@ public class JobHandler extends Handler {
             clear();
             for (Job job : oldJobs) {
                 String newScheduledId = scheduler.schedule(job.getCronSyntax(), () -> {
-                    send(job.getMessage());
+                    send(new SendMessage(job.getMessage()));
                 });
                 store(newScheduledId, job.getStoredData());
                 jobs.add(new Job(newScheduledId, job.getCronSyntax(), job.getMessage()));
             }
         } catch (JabotBrainException e) {
-            logger.error("Failed to load jobs: " + e.getMessage(), e);
+            log.error("Failed to load jobs: " + e.getMessage(), e);
         }
         scheduler.start();
     }

@@ -17,9 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.krrrr38.jabot.plugin.brain.EmptyBrain;
+import com.krrrr38.jabot.plugin.message.SendMessage;
 
 public class HelpHandlerTest {
-    private Deque<String> queue = new ArrayDeque<>();
+    private Deque<SendMessage> queue = new ArrayDeque<>();
     private Handler helpHandler;
 
     private List<Handler> handlers = new ArrayList<>();
@@ -29,7 +30,7 @@ public class HelpHandlerTest {
         List<Rule> sampleHandlerRules = new ArrayList<>();
         sampleHandlerRules.add(new Rule(
                 Pattern.compile(""), "sample", "sample description",
-                "sample usage", false, strings -> Optional.empty()));
+                "sample usage", false, (sender, strings) -> Optional.empty()));
         handlers = new ArrayList<>();
         Handler sampleHandler = new Handler() {
             @Override
@@ -64,20 +65,20 @@ public class HelpHandlerTest {
 
     @Test
     public void testReceive() throws Exception {
-        assertThat("`message` is not caught", helpHandler.receive("message"), is(Optional.of("message")));
+        assertThat("`message` is not caught", helpHandler.receive(null, "message"), is(Optional.of("message")));
         assertThat(queue.isEmpty(), is(true));
 
         // help all rules
-        assertThat(helpHandler.receive("help"), is(Optional.empty()));
+        assertThat(helpHandler.receive(null, "help"), is(Optional.empty()));
         assertThat("catch success", queue.size(), is(1));
-        String lastMessage = queue.peekLast();
+        String lastMessage = queue.peekLast().getMessage();
         assertThat("contains sample rule usage", lastMessage, containsString("sample usage"));
         assertThat("contains help rule usage", lastMessage, containsString("help <name>"));
 
         // help specific rule
-        assertThat(helpHandler.receive("help sample"), is(Optional.empty()));
+        assertThat(helpHandler.receive(null, "help sample"), is(Optional.empty()));
         assertThat("catch success", queue.size(), is(2));
-        lastMessage = queue.peekLast();
+        lastMessage = queue.peekLast().getMessage();
         assertThat("contains sample rule usage", lastMessage, containsString("sample usage"));
         assertThat("not contains help rule usage", lastMessage, not(containsString("help <name>")));
     }
