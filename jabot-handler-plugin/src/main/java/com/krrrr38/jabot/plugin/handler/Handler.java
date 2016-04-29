@@ -1,14 +1,14 @@
 package com.krrrr38.jabot.plugin.handler;
 
-import com.krrrr38.jabot.plugin.Plugin;
-import com.krrrr38.jabot.plugin.brain.Brain;
-import com.krrrr38.jabot.plugin.brain.JabotBrainException;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+
+import com.krrrr38.jabot.plugin.Plugin;
+import com.krrrr38.jabot.plugin.brain.Brain;
+import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 
 abstract public class Handler extends Plugin {
     private String namespace;
@@ -34,7 +34,8 @@ abstract public class Handler extends Plugin {
         this.namespace = namespace;
         this.brain = brain;
         this.sender = sender;
-        this.rules = build(options);
+        this.rules = buildRules(options);
+        afterSetup(options);
     }
 
     /**
@@ -64,7 +65,7 @@ abstract public class Handler extends Plugin {
      * @param options handler options
      * @return rules
      */
-    abstract List<Rule> build(Map<String, String> options);
+    abstract List<Rule> buildRules(Map<String, String> options);
 
     /**
      * Hook and Modify handler comparing with other handlers.

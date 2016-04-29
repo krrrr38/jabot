@@ -257,5 +257,13 @@ public class PluginTest {
         protected String getNamespace() {
             return NAMESPACE;
         }
+
+        @Override
+        public void afterSetup(Map<String, String> options) {
+        }
+
+        @Override
+        public void beforeDestroy() {
+        }
     }
 }

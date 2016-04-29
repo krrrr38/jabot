@@ -1,16 +1,16 @@
 package com.krrrr38.jabot.plugin.adapter;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Before;
+import org.junit.Test;
 
 public class AdapterTest {
     private Deque<String> receiver = new ArrayDeque<>();
@@ -20,7 +20,11 @@ public class AdapterTest {
         private int counter = 0;
 
         @Override
-        protected void build(Map<String, String> options) {
+        public void afterSetup(Map<String, String> options) {
+        }
+
+        @Override
+        public void beforeDestroy() {
         }
 
         @Override

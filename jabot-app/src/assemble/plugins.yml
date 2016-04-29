@@ -8,6 +8,8 @@ adapter: # require one adapter
 handlers: # NOTE: messages would be handled by THIS ORDER.
   - plugin: com.krrrr38.jabot.plugin.handler.ReplaceHandler
     namespace: replace-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.JobHandler
+    namespace: job-handler
   - plugin: com.krrrr38.jabot.plugin.handler.HelpHandler
     namespace: help-handler
   - plugin: com.krrrr38.jabot.plugin.handler.EchoHandler

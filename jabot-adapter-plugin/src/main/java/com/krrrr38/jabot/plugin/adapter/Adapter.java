@@ -1,11 +1,11 @@
 package com.krrrr38.jabot.plugin.adapter;
 
-import com.krrrr38.jabot.plugin.Plugin;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import com.krrrr38.jabot.plugin.Plugin;
 
 abstract public class Adapter extends Plugin {
     private volatile boolean running = false;
@@ -35,8 +35,7 @@ abstract public class Adapter extends Plugin {
         this.namespace = namespace;
         this.botName = botName;
         this.receiver = receiver;
-
-        build(options);
+        afterSetup(options);
     }
 
     /**
@@ -63,13 +62,6 @@ abstract public class Adapter extends Plugin {
     protected String getBotName() {
         return botName;
     }
-
-    /**
-     * build settings. this method is called once when starting application.
-     *
-     * @param options adapter options
-     */
-    protected abstract void build(Map<String, String> options);
 
     /**
      * receive message

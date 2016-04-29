@@ -25,7 +25,7 @@ public class SlackAdapter extends Adapter {
     private Queue<String> queue = new ConcurrentLinkedQueue<>();
 
     @Override
-    protected void build(Map<String, String> options) {
+    public void afterSetup(Map<String, String> options) {
         String botName = getBotName();
         String token = requireString(options, OPTIONS_TOKEN);
         String channelName = requireString(options, OPTIONS_CHANNEL);
@@ -44,13 +44,13 @@ public class SlackAdapter extends Adapter {
 
         // find botId
         String botId = slack.getBots().stream()
-                .filter(bot -> botName.equals(bot.getUserName()))
-                .findFirst()
-                .map(SlackPersona::getId)
-                .orElseThrow(() -> {
-                    String message = String.format("Cannot find target bot: %s\nPlease set `same` name with plugins.yml name and slack Customize name.", botName);
-                    return new RuntimeException(message);
-                });
+                            .filter(bot -> botName.equals(bot.getUserName()))
+                            .findFirst()
+                            .map(SlackPersona::getId)
+                            .orElseThrow(() -> {
+                                String message = String.format("Cannot find target bot: %s\nPlease set `same` name with plugins.yml name and slack Customize name.", botName);
+                                return new RuntimeException(message);
+                            });
         logger.info("Found Slack bot: {}", botId);
 
         // register listener
@@ -58,11 +58,16 @@ public class SlackAdapter extends Adapter {
             logger.debug("Received Slack Message: {}", slackMessagePosted);
             String message = slackMessagePosted.getMessageContent().trim();
             if (channelName.equals(slackMessagePosted.getChannel().getName())
-                    && isBotMention(message, botName, botId)
-                    && !isSelfMessage(slackMessagePosted.getSender(), botId)) {
+                && isBotMention(message, botName, botId)
+                && !isSelfMessage(slackMessagePosted.getSender(), botId)) {
                 queue.add(omitBotInfo(message, botName, botId));
             }
         });
+    }
+
+    @Override
+    public void beforeDestroy() {
+        // slack.disconnect();
     }
 
     private String omitBotInfo(String message, String botName, String botId) {

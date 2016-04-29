@@ -2,6 +2,7 @@ package com.krrrr38.jabot.plugin.handler;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayDeque;
@@ -17,16 +18,17 @@ import org.junit.Test;
 import com.krrrr38.jabot.plugin.brain.Brain;
 import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 
-public class ReplaceHandlerTest {
+public class JobHandlerTest {
     private Deque<String> queue = new ArrayDeque<>();
     private Handler handler;
 
     @Before
     public void setUp() throws Exception {
         Brain brain = new MockInmemoryBrain();
-        brain.setup("replace-handler", "jabot", Collections.emptyMap());
-        handler = new ReplaceHandler();
-        handler.setup("replace-handler", brain, queue::add, null);
+        brain.setup("job-handler", "jabot", Collections.emptyMap());
+        handler = new JobHandler();
+        handler.setup("job-handler", brain, queue::add, null);
+        handler.afterRegister(Collections.emptyList());
     }
 
     @Test
@@ -34,37 +36,43 @@ public class ReplaceHandlerTest {
         assertThat("`foo` is not caught", handler.receive("foo"), is(Optional.of("foo")));
         assertThat(queue.isEmpty(), is(true));
 
-        assertThat(handler.receive("list patterns"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("No registered replace patterns"));
+        assertThat(handler.receive("list jobs"), is(Optional.empty()));
+        assertThat(queue.peekLast(), containsString("No registered jobs"));
 
-        assertThat(handler.receive("replace foo with bar"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("Registered pattern"));
-        assertThat(handler.receive("replace piyo with zzz"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("Registered pattern"));
+        assertThat(handler.receive("add job \"* * a * *\" invalid cron syntax"), is(Optional.empty()));
+        assertThat(queue.peekLast(), containsString("Failed to register job"));
 
-        assertThat(handler.receive("list patterns"), is(Optional.empty()));
-        assertThat("pattern registered correctly", queue.peekLast(), containsString("foo → bar"));
+        assertThat(handler.receive("add job \"1-5 * * * *\" test-message1"), is(Optional.empty()));
+        assertThat(queue.peekLast(), containsString("Register new job"));
+        assertThat(handler.receive("add job \"*/5 * * * *\" test-message2"), is(Optional.empty()));
+        assertThat(queue.peekLast(), containsString("Register new job"));
 
-        assertThat("`foo` is replaced to `bar`", handler.receive("foo"), is(Optional.of("bar")));
-        assertThat("`piyo` is replaced to `zzz`", handler.receive("test foo piyo"), is(Optional.of("test bar zzz")));
+        assertThat(handler.receive("delete job 2"), is(Optional.empty()));
+        assertThat(queue.peekLast(), containsString("No such job"));
 
-        assertThat(handler.receive("delete pattern foo"), is(Optional.empty()));
-        assertThat("pattern deleted correctly", queue.peekLast(), containsString("Deleted"));
+        assertThat(handler.receive("delete job 1"), is(Optional.empty()));
+        String deletedMessage = queue.peekLast();
+        assertThat(deletedMessage, containsString("Deleted job"));
+        assertThat(deletedMessage, containsString("test-message2"));
 
-        assertThat("`foo` pattern is not applied", handler.receive("test foo piyo"), is(Optional.of("test foo zzz")));
+        assertThat(handler.receive("list jobs"), is(Optional.empty()));
+        String listMessage = queue.peekLast();
+        assertThat("job stored correctly", listMessage, containsString("test-message1"));
+        assertThat("job deleted correctly", listMessage, not(containsString("test-message2")));
 
-        assertThat(handler.receive("delete all patterns"), is(Optional.empty()));
-        assertThat("patterns deleted correctly", queue.peekLast(), containsString("Deleted all patterns"));
+        assertThat(handler.receive("delete all jobs"), is(Optional.empty()));
+        assertThat("jobs deleted correctly", queue.peekLast(), containsString("Deleted all jobs"));
 
         assertThat("nothing to be applied", handler.receive("test foo piyo"), is(Optional.of("test foo piyo")));
 
-        assertThat(handler.receive("list patterns"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("No registered replace patterns"));
+        assertThat(handler.receive("list jobs"), is(Optional.empty()));
+        assertThat(queue.peekLast(), containsString("No registered jobs"));
     }
 
     @Test
     public void testReceiveBrainException() throws Exception {
-        assertThat("If raise BrainException, return empty not to pass next handler", handler.receive("replace raise with exception"), is(Optional.empty()));
+        assertThat("If raise BrainException, return empty not to pass next handler",
+                   handler.receive("add job \"* * * * *\" raise brain exception"), is(Optional.empty()));
         assertThat(queue.peekLast(), containsString("raise error"));
     }
 
@@ -92,7 +100,7 @@ public class ReplaceHandlerTest {
 
         @Override
         public boolean store(String namespace, String key, String value) throws JabotBrainException {
-            if (key.equals("raise") && value.equals("exception")) {
+            if (value.contains("raise brain exception")) {
                 throw new JabotBrainException("raise error");
             }
             brain.put(key, value);
@@ -100,14 +108,16 @@ public class ReplaceHandlerTest {
         }
 
         @Override
-        public boolean store(String namespace, String key1, String value1, String key2, String value2) throws JabotBrainException {
+        public boolean store(String namespace, String key1, String value1, String key2, String value2)
+                throws JabotBrainException {
             brain.put(key1, value1);
             brain.put(key2, value2);
             return true;
         }
 
         @Override
-        public boolean store(String namespace, String key1, String value1, String key2, String value2, String key3, String value3) throws JabotBrainException {
+        public boolean store(String namespace, String key1, String value1, String key2, String value2,
+                             String key3, String value3) throws JabotBrainException {
             brain.put(key1, value1);
             brain.put(key2, value2);
             brain.put(key3, value3);

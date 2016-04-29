@@ -4,9 +4,14 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-public class EmptyBrain extends Brain {
+public
+class EmptyBrain extends Brain {
     @Override
-    protected void build(Map<String, String> options) throws JabotBrainException {
+    public void afterSetup(Map<String, String> options) {
+    }
+
+    @Override
+    public void beforeDestroy() {
     }
 
     @Override

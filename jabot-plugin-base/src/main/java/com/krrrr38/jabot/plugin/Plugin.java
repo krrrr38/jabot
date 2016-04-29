@@ -14,6 +14,16 @@ abstract public class Plugin {
 
     protected abstract String getNamespace();
 
+    /**
+     * After setup hook
+     */
+    abstract public void afterSetup(Map<String, String> options);
+
+    /**
+     * Before destroy Hook
+     */
+    abstract public void beforeDestroy();
+
     ////////////////////////////////////////////////////////////////////////////
     // options utilities
 
