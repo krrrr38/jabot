@@ -189,5 +189,6 @@
         <module>plugins/jabot-task-handler</module>
         <module>plugins/jabot-memo-handler</module>
         <module>plugins/jabot-job-handler</module>
+        <module>plugins/jabot-health-check-handler</module>
     </modules>
 </project>

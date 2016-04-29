@@ -73,6 +73,11 @@
             <artifactId>jabot-job-handler</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.krrrr38</groupId>
+            <artifactId>jabot-health-check-handler</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- other dependencies -->
         <dependency>

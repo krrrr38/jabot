@@ -14,6 +14,16 @@ handlers: # NOTE: messages would be handled by THIS ORDER.
     namespace: memo-handler
   - plugin: com.krrrr38.jabot.plugin.handler.JobHandler
     namespace: job-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.HealthCheckHandler
+    namespace: health-check-handler
+    options:
+      intervalCronSyntax: "* * * * *" # cron syntax
+      alertPrefix: "[ERROR] @all " # alert message prefix
+      connectTimeout: 2000 # http request connect timeout
+      socketTimeout: 3000 # http request socket timeout
+      userAgent: jabot-health-check # http request user agent
+      customHeaderName: X-My-Header # http request custom header name
+      customHeaderValue: x-my-header-value # http request custom header value
   - plugin: com.krrrr38.jabot.plugin.handler.HelpHandler
     namespace: help-handler
   - plugin: com.krrrr38.jabot.plugin.handler.EchoHandler
