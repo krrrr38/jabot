@@ -28,6 +28,8 @@ handlers: # NOTE: messages would be handled by THIS ORDER.
     namespace: help-handler
   - plugin: com.krrrr38.jabot.plugin.handler.EchoHandler
     namespace: echo-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.TimeHandler
+    namespace: time-handler
   - plugin: com.krrrr38.jabot.plugin.handler.PingHandler
     namespace: ping-handler
 brain:
