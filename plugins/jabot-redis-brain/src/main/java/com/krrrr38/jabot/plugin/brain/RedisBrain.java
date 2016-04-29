@@ -33,7 +33,7 @@ public class RedisBrain extends Brain {
     private JedisPool pool;
 
     @Override
-    protected void build(Map<String, String> options) throws JabotBrainException {
+    public void afterSetup(Map<String, String> options) {
         // basic db settings
         String host = optionString(options, OPTIONS_DB_HOST, Protocol.DEFAULT_HOST);
         int port = optionInteger(options, OPTIONS_DB_PORT, Protocol.DEFAULT_PORT);
@@ -53,6 +53,13 @@ public class RedisBrain extends Brain {
         jedisPoolConfig.setTestOnCreate(optionBoolean(options, OPTIONS_POOL_TEST_ON_CREATE, BaseObjectPoolConfig.DEFAULT_TEST_ON_CREATE));
         jedisPoolConfig.setTestOnReturn(optionBoolean(options, OPTIONS_POOL_TEST_ON_RETURN, BaseObjectPoolConfig.DEFAULT_TEST_ON_RETURN));
         pool = new JedisPool(jedisPoolConfig, host, port, connectionTimeout, socketTimeout, password, database, clientName);
+    }
+
+    @Override
+    public void beforeDestroy() {
+        if (pool != null && !pool.isClosed()) {
+            pool.close();
+        }
     }
 
     @Override

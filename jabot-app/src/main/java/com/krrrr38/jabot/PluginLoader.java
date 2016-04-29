@@ -34,6 +34,7 @@ public class PluginLoader {
         // after registring hook
         handlers.forEach(handler -> handler.afterRegister(handlers));
 
+        context.setBrain(brain);
         context.setAdapter(adapter);
         context.setHandlers(handlers);
     }

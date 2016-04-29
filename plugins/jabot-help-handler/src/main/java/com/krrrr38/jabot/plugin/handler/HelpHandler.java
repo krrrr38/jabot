@@ -13,17 +13,19 @@ public class HelpHandler extends Handler {
     private List<Handler> handlers;
 
     @Override
-    List<Rule> build(Map<String, String> options) {
-        Rule helpRule = new Rule(
-                Pattern.compile("\\Ahelp(?: me)?(?: (.+))?\\z", Pattern.CASE_INSENSITIVE),
-                HANDLER_NAME,
-                "Show help messages",
-                "help <name>",
-                false,
-                help()
-        );
-        return Collections.singletonList(helpRule);
+    List<Rule> buildRules(Map<String, String> options) {
+        return Collections.singletonList(HELP_RULE);
     }
+
+    private final Rule HELP_RULE =
+            new Rule(
+                    Pattern.compile("\\Ahelp(?: me)?(?: (.+))?\\z", Pattern.CASE_INSENSITIVE),
+                    HANDLER_NAME,
+                    "Show help messages",
+                    "help <name>",
+                    false,
+                    help()
+            );
 
     private Function<String[], Optional<String>> help() {
         return strings -> {
@@ -39,16 +41,16 @@ public class HelpHandler extends Handler {
 
     private void showRule(String ruleName) {
         String message = handlers.stream()
-                .flatMap(handler -> handler.getRules().stream())
-                .filter(rule -> rule.getName().contains(ruleName))
-                .filter(rule -> !rule.isHidden())
-                .map(rule -> String.format(
-                        "[%s] %s\n  Description: %s\n  Pattern: %s",
-                        rule.getName(),
-                        rule.getUsage(),
-                        rule.getDescription(),
-                        rule.getPattern().pattern()))
-                .collect(Collectors.joining("\n"));
+                                 .flatMap(handler -> handler.getRules().stream())
+                                 .filter(rule -> rule.getName().contains(ruleName))
+                                 .filter(rule -> !rule.isHidden())
+                                 .map(rule -> String.format(
+                                         "[%s] %s\n  Description: %s\n  Pattern: %s",
+                                         rule.getName(),
+                                         rule.getUsage(),
+                                         rule.getDescription(),
+                                         rule.getPattern().pattern()))
+                                 .collect(Collectors.joining("\n"));
         if (!message.isEmpty()) {
             send(message);
         } else {
@@ -58,15 +60,24 @@ public class HelpHandler extends Handler {
 
     private void showRules() {
         String message = handlers.stream()
-                .flatMap(handler -> handler.getRules().stream())
-                .filter(rule -> !rule.isHidden())
-                .map(rule -> String.format("[%s] %s - %s", rule.getName(), rule.getUsage(), rule.getDescription()))
-                .collect(Collectors.joining("\n"));
+                                 .flatMap(handler -> handler.getRules().stream())
+                                 .filter(rule -> !rule.isHidden())
+                                 .map(rule -> String.format("[%s] %s - %s", rule.getName(), rule.getUsage(),
+                                                            rule.getDescription()))
+                                 .collect(Collectors.joining("\n"));
         send(message);
     }
 
     @Override
     public void afterRegister(List<Handler> handlers) {
         this.handlers = handlers;
+    }
+
+    @Override
+    public void afterSetup(Map<String, String> options) {
+    }
+
+    @Override
+    public void beforeDestroy() {
     }
 }

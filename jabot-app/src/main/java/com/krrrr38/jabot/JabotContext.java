@@ -1,26 +1,24 @@
 package com.krrrr38.jabot;
 
-import com.krrrr38.jabot.plugin.adapter.Adapter;
-import com.krrrr38.jabot.plugin.handler.Handler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.krrrr38.jabot.plugin.adapter.Adapter;
+import com.krrrr38.jabot.plugin.brain.Brain;
+import com.krrrr38.jabot.plugin.handler.Handler;
+
+import lombok.Data;
+
+@Data
 public class JabotContext {
     private static final Logger logger = LoggerFactory.getLogger(JabotContext.class);
 
+    private Brain brain;
     private Adapter adapter;
     private List<Handler> handlers;
-
-    void setAdapter(Adapter adapter) {
-        this.adapter = adapter;
-    }
-
-    void setHandlers(List<Handler> handlers) {
-        this.handlers = handlers;
-    }
 
     public void send(String message) {
         logger.debug("Send message: {}", message);
@@ -37,5 +35,8 @@ public class JabotContext {
 
     public void listenAdapter() {
         adapter.listen();
+        handlers.forEach(Handler::beforeDestroy);
+        adapter.beforeDestroy();
+        brain.beforeDestroy();
     }
 }

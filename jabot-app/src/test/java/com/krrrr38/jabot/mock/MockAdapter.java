@@ -1,16 +1,20 @@
 package com.krrrr38.jabot.mock;
 
-import com.krrrr38.jabot.plugin.adapter.Adapter;
-
 import java.util.Deque;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
+
+import com.krrrr38.jabot.plugin.adapter.Adapter;
 
 public class MockAdapter extends Adapter {
     public static Deque<String> queue = new ConcurrentLinkedDeque<>();
 
     @Override
-    protected void build(Map<String, String> options) {
+    public void afterSetup(Map<String, String> options) {
+    }
+
+    @Override
+    public void beforeDestroy() {
     }
 
     @Override

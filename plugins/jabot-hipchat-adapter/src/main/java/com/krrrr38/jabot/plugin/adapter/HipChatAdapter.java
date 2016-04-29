@@ -48,6 +48,7 @@ public class HipChatAdapter extends Adapter {
     private static final Pattern MESSAGE_COLOR_PATTERN =
             Pattern.compile("yellow|red|green|purple|gray|random");
 
+    private Undertow server;
     private Queue<String> queue = new ConcurrentLinkedQueue<>();
     private String postUrl;
     private String messageColor;
@@ -55,7 +56,7 @@ public class HipChatAdapter extends Adapter {
     private String slashCommand;
 
     @Override
-    protected void build(Map<String, String> options) {
+    public void afterSetup(Map<String, String> options) {
         String botName = getBotName();
         postUrl = requireString(options, OPTIONS_POST_URL);
         messageColor = optionString(options, OPTIONS_MESSAGE_COLOR, DEFAULT_MESSAGE_COLOR,
@@ -64,12 +65,17 @@ public class HipChatAdapter extends Adapter {
         slashCommand = optionString(options, OPTIONS_SLASH_COMMAND, String.format("/%s", botName));
         int port = optionInteger(options, OPTIONS_WEBHOOK_PORT, DEFAULT_PORT);
 
-        Undertow server = Undertow.builder()
-                                  .addHttpListener(port, DEFAULT_HOST)
-                                  .setHandler(new HipChatWebhookHandler(queue))
-                                  .build();
+        server = Undertow.builder()
+                         .addHttpListener(port, DEFAULT_HOST)
+                         .setHandler(new HipChatWebhookHandler(queue))
+                         .build();
         server.start();
         logger.info("HipChat Webhook Server Start: host={}, port={}", DEFAULT_HOST, port);
+    }
+
+    @Override
+    public void beforeDestroy() {
+        server.stop();
     }
 
     @Override

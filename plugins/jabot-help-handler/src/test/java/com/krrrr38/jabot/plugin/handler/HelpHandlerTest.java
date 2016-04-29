@@ -1,14 +1,22 @@
 package com.krrrr38.jabot.plugin.handler;
 
-import com.krrrr38.jabot.plugin.brain.EmptyBrain;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
-import java.util.regex.Pattern;
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import com.krrrr38.jabot.plugin.brain.EmptyBrain;
 
 public class HelpHandlerTest {
     private Deque<String> queue = new ArrayDeque<>();
@@ -25,12 +33,20 @@ public class HelpHandlerTest {
         handlers = new ArrayList<>();
         Handler sampleHandler = new Handler() {
             @Override
-            List<Rule> build(Map<String, String> options) {
+            List<Rule> buildRules(Map<String, String> options) {
                 return sampleHandlerRules;
             }
 
             @Override
             public void afterRegister(List<Handler> handlers) {
+            }
+
+            @Override
+            public void afterSetup(Map<String, String> options) {
+            }
+
+            @Override
+            public void beforeDestroy() {
             }
         };
 

@@ -16,9 +16,14 @@ public class ShellAdapter extends Adapter {
     private Scanner scanner;
 
     @Override
-    protected void build(Map<String, String> options) {
+    public void afterSetup(Map<String, String> options) {
         prompt = optionString(options, OPTIONS_PROMPT, DEFAULT_PROMPT);
         scanner = new Scanner(System.in);
+    }
+
+    @Override
+    public void beforeDestroy() {
+        scanner.close();
     }
 
     @Override

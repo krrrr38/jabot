@@ -1,16 +1,21 @@
 package com.krrrr38.jabot.plugin.handler;
 
-import com.krrrr38.jabot.plugin.brain.Brain;
-import com.krrrr38.jabot.plugin.brain.JabotBrainException;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.krrrr38.jabot.plugin.brain.Brain;
+import com.krrrr38.jabot.plugin.brain.JabotBrainException;
 
 public class ReplaceHandlerTest {
     private Deque<String> queue = new ArrayDeque<>();
@@ -30,7 +35,7 @@ public class ReplaceHandlerTest {
         assertThat(queue.isEmpty(), is(true));
 
         assertThat(handler.receive("list patterns"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("No registry replace patterns"));
+        assertThat(queue.peekLast(), containsString("No registered replace patterns"));
 
         assertThat(handler.receive("replace foo with bar"), is(Optional.empty()));
         assertThat(queue.peekLast(), containsString("Registered pattern"));
@@ -54,7 +59,7 @@ public class ReplaceHandlerTest {
         assertThat("nothing to be applied", handler.receive("test foo piyo"), is(Optional.of("test foo piyo")));
 
         assertThat(handler.receive("list patterns"), is(Optional.empty()));
-        assertThat(queue.peekLast(), containsString("No registry replace patterns"));
+        assertThat(queue.peekLast(), containsString("No registered replace patterns"));
     }
 
     @Test
@@ -67,8 +72,12 @@ public class ReplaceHandlerTest {
         private Map<String, String> brain;
 
         @Override
-        protected void build(Map<String, String> options) throws JabotBrainException {
+        public void afterSetup(Map<String, String> options) {
             brain = new ConcurrentHashMap<>();
+        }
+
+        @Override
+        public void beforeDestroy() {
         }
 
         @Override

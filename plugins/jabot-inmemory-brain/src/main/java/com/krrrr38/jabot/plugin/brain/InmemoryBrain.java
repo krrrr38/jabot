@@ -9,8 +9,12 @@ public final class InmemoryBrain extends Brain {
     private Map<String, Map<String, String>> brain;
 
     @Override
-    protected void build(Map<String, String> options) throws JabotBrainException {
+    public void afterSetup(Map<String, String> options) {
         brain = new ConcurrentHashMap<>();
+    }
+
+    @Override
+    public void beforeDestroy() {
     }
 
     @Override

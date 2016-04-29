@@ -1,18 +1,27 @@
 package com.krrrr38.jabot.plugin.handler;
 
-import com.krrrr38.jabot.plugin.brain.Brain;
-import com.krrrr38.jabot.plugin.brain.EmptyBrain;
-import com.krrrr38.jabot.plugin.brain.JabotBrainException;
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.krrrr38.jabot.plugin.brain.Brain;
+import com.krrrr38.jabot.plugin.brain.EmptyBrain;
 
 public class HandlerTest {
     private static final String MOCK_BRAIN_NAMESPACE = "namespace";
@@ -36,12 +45,20 @@ public class HandlerTest {
         );
         handler = new Handler() {
             @Override
-            List<Rule> build(Map<String, String> options) {
+            List<Rule> buildRules(Map<String, String> options) {
                 return rules;
             }
 
             @Override
             public void afterRegister(List<Handler> handlers) {
+            }
+
+            @Override
+            public void afterSetup(Map<String, String> options) {
+            }
+
+            @Override
+            public void beforeDestroy() {
             }
         };
         Brain brain = new MockMemoryBrain();
@@ -144,8 +161,12 @@ public class HandlerTest {
         Map<String, String> brain;
 
         @Override
-        protected void build(Map<String, String> options) throws JabotBrainException {
+        public void afterSetup(Map<String, String> options) {
             brain = new ConcurrentHashMap<>();
+        }
+
+        @Override
+        public void beforeDestroy() {
         }
 
         @Override
@@ -172,7 +193,8 @@ public class HandlerTest {
         }
 
         @Override
-        public boolean store(String namespace, String key1, String value1, String key2, String value2, String key3, String value3) {
+        public boolean store(String namespace, String key1, String value1, String key2, String value2,
+                             String key3, String value3) {
             brain.put(key1, value1);
             brain.put(key2, value2);
             brain.put(key3, value3);

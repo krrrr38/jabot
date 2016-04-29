@@ -1,9 +1,9 @@
 package com.krrrr38.jabot.plugin.brain;
 
-import com.krrrr38.jabot.plugin.Plugin;
-
 import java.util.Map;
 import java.util.Optional;
+
+import com.krrrr38.jabot.plugin.Plugin;
 
 abstract public class Brain extends Plugin {
     private String namespace;
@@ -26,8 +26,7 @@ abstract public class Brain extends Plugin {
         }
         this.namespace = namespace;
         this.botName = botName;
-
-        build(options);
+        afterSetup(options);
     }
 
     /**
@@ -36,13 +35,6 @@ abstract public class Brain extends Plugin {
     protected String getBotName() {
         return botName;
     }
-
-    /**
-     * build settings. this method is called once when starting application.
-     *
-     * @param options brain options
-     */
-    protected abstract void build(Map<String, String> options) throws JabotBrainException;
 
     /**
      * get namespace all keys &amp; values
