@@ -50,8 +50,7 @@ public class HealthCheckHandlerTest {
 
         assertThat(handler.receive(null, "suspend health-check 100"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("No such health check"));
-//        assertThat(handler.receive(null, "suspend health-check 2147483648"), is(Optional.empty()));
-//        assertThat(queue.peekLast().getMessage(), containsString("No such health check"));
+        assertThat(handler.receive(null, "suspend health-check 2147483648"), is(Optional.of("suspend health-check 2147483648")));
         assertThat(handler.receive(null, "suspend health-check 1"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(),
                    containsString("Suspend health check: HEAD http://example.com/foo/?paaa=bar#bbb my memo"));

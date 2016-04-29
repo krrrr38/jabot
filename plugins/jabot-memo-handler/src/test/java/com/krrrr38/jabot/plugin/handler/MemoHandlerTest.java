@@ -43,14 +43,15 @@ public class MemoHandlerTest {
 
         assertThat(handler.receive(null, "add memo key1 message1"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("Registered new memo"));
-        assertThat(handler.receive(null, "add memo key2 m e s s a g e 2"), is(Optional.empty()));
+        assertThat(handler.receive(null, "add memo key2 m e\ns\ts\n\n \n a g e 2"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("Registered new memo"));
 
         assertThat(handler.receive(null, "delete memo invalid-key"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("No such memo"));
 
         assertThat(handler.receive(null, "delete memo key2"), is(Optional.empty()));
-        assertThat(queue.peekLast().getMessage(), containsString("Memo Deleted: [key2] m e s s a g e 2"));
+        assertThat(queue.peekLast().getMessage(),
+                   containsString("Memo Deleted: [key2] m e\ns\ts\n\n \n a g e 2"));
 
         assertThat(handler.receive(null, "list memos"), is(Optional.empty()));
         String listMessage = queue.peekLast().getMessage();

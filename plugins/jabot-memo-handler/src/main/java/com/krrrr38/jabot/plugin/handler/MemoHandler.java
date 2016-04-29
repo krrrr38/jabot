@@ -80,7 +80,7 @@ public class MemoHandler extends Handler {
 
     private Rule ADD_MEMO =
             new Rule(
-                    Pattern.compile("\\Aadd memo (.+?) (.+)\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Aadd memo (.+?) ([\\s\\S]+)\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Register new memo",
                     "add memo <key> <memo>",

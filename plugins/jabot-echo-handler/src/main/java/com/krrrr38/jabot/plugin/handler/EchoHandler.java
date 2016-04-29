@@ -19,7 +19,7 @@ public class EchoHandler extends Handler {
 
     private final Rule ECHO_RULE =
             new Rule(
-                    Pattern.compile("\\Aecho\\s+(.+)\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Aecho ([\\s\\S]+)\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Reply your message",
                     "echo <message>",

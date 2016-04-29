@@ -148,10 +148,10 @@ public class HealthCheckHandler extends Handler {
 
     private final Rule SUSPEND_HEALTH_CHECK =
             new Rule(
-                    Pattern.compile("\\Asuspend health-check (\\d+)\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Asuspend health-check (\\d{1,9})\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Suspend health check by index",
-                    "suspend health-check <index:\\d+>",
+                    "suspend health-check <index:\\d{1,9}>",
                     false,
                     (sender, strings) -> brainGuard(() -> {
                         int index = Integer.parseInt(strings[0]);
@@ -194,10 +194,10 @@ public class HealthCheckHandler extends Handler {
 
     private final Rule RESUME_HEALTH_CHECK =
             new Rule(
-                    Pattern.compile("\\Aresume health-check (\\d+)\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Aresume health-check (\\d{1,9})\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Resume health check by index",
-                    "resume health-check <index:\\d+>",
+                    "resume health-check <index:\\d{1,9}>",
                     false,
                     (sender, strings) -> brainGuard(() -> {
                         int index = Integer.parseInt(strings[0]);

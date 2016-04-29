@@ -101,10 +101,10 @@ public class JobHandler extends Handler {
 
     private final Rule DELETE_JOB =
             new Rule(
-                    Pattern.compile("\\Adelete job (\\d+)\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Adelete job (\\d{1,9})\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Delete job by index",
-                    "delete job <index:\\d+>",
+                    "delete job <index:\\d{1,9}>",
                     false,
                     (sender, strings) -> brainGuard(() -> {
                         int index = Integer.parseInt(strings[0]);

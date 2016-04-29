@@ -28,8 +28,8 @@ public class EchoHandlerTest {
         assertThat("`message` is not caught", handler.receive(null, "message"), is(Optional.of("message")));
         assertThat(queue.isEmpty(), is(true));
 
-        assertThat(handler.receive(null, "echo foo"), is(Optional.empty()));
+        assertThat(handler.receive(null, "echo foo\n\nbar"), is(Optional.empty()));
         assertThat(queue.size(), is(1));
-        assertThat(queue.peekLast().getMessage(), is("foo"));
+        assertThat(queue.peekLast().getMessage(), is("foo\n\nbar"));
     }
 }

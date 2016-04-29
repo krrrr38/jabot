@@ -62,10 +62,10 @@ public class TaskHandler extends Handler {
 
     private final Rule DELETE_TASK =
             new Rule(
-                    Pattern.compile("\\Adelete task (\\d+)\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Adelete task (\\d{1,9})\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Delete user's task task by index",
-                    "delete task <index:\\d+>",
+                    "delete task <index:\\d{1,9}>",
                     false,
                     (sender, strings) -> brainGuard(() -> {
                         int index = Integer.parseInt(strings[0]);
@@ -110,7 +110,7 @@ public class TaskHandler extends Handler {
 
     private Rule ADD_TASK =
             new Rule(
-                    Pattern.compile("\\Aadd task (.+)\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Aadd task ([\\s\\S]+)\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Register user's new task",
                     "add task <message>",
