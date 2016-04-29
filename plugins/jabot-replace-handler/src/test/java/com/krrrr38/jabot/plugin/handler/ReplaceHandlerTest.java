@@ -37,6 +37,8 @@ public class ReplaceHandlerTest {
 
         assertThat(handler.receive(null, "list patterns"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("No registered replace patterns"));
+        assertThat(handler.receive(null, "patterns"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("No registered replace patterns"));
 
         assertThat(handler.receive(null, "replace foo with bar"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("Registered pattern"));

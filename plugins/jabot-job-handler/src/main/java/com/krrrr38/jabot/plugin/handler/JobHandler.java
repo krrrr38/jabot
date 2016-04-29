@@ -32,7 +32,7 @@ public class JobHandler extends Handler {
 
     private final Rule JOB_LIST =
             new Rule(
-                    Pattern.compile("\\Alist jobs\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\A(list )?jobs\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Show registered jobs",
                     "list jobs",

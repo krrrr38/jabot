@@ -40,6 +40,8 @@ public class TaskHandlerTest {
 
         assertThat(handler.receive(sender, "list tasks"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("No registered tasks"));
+        assertThat(handler.receive(sender, "tasks"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("No registered tasks"));
 
         assertThat(handler.receive(sender, "add task message1"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("Registered new task"));

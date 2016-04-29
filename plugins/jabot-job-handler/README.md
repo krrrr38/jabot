@@ -3,7 +3,7 @@
 Schedule message management handler.
 
 ```sh
-list jobs
+list jobs # or `jobs`
 add job "<cron syntax>" <message>
 delete job <index:\\d+>
 ```

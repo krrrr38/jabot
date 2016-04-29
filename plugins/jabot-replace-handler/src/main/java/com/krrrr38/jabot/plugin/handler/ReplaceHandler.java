@@ -27,7 +27,7 @@ public class ReplaceHandler extends Handler {
 
     private final Rule LIST_RULE =
             new Rule(
-                    Pattern.compile("\\Alist patterns\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\A(list )?patterns\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Show registered patterns to replace",
                     "replace patterns",

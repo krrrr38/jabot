@@ -39,6 +39,8 @@ public class JobHandlerTest {
 
         assertThat(handler.receive(null, "list jobs"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("No registered jobs"));
+        assertThat(handler.receive(null, "jobs"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("No registered jobs"));
 
         assertThat(handler.receive(null, "add job \"* * a * *\" invalid cron syntax"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("Failed to register job"));

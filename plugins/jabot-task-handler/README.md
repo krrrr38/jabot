@@ -3,7 +3,7 @@
 task management handler for __message sender__
 
 ```sh
-list tasks
+list tasks # or `tasks`
 add task <message>
 delete task <index:\\d+>
 delete all tasks

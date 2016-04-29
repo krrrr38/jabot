@@ -3,7 +3,7 @@
 Replace given message with registered patterns for other handlers.
 
 ```sh
-list patterns
+list patterns # or `patterns`
 replace <from> with <to>
 delete pattern <from>
 delete all patterns

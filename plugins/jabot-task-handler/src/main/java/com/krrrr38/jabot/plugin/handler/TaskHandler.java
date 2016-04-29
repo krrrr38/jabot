@@ -33,7 +33,7 @@ public class TaskHandler extends Handler {
 
     private final Rule LIST_TASKS =
             new Rule(
-                    Pattern.compile("\\Alist tasks\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\A(list )?tasks\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Show user's task list",
                     "list tasks",
