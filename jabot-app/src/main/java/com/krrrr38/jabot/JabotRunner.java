@@ -1,9 +1,10 @@
 package com.krrrr38.jabot;
 
-import com.krrrr38.jabot.config.CommandConfig;
-import com.krrrr38.jabot.config.JabotConfig;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+
+import com.krrrr38.jabot.config.CommandConfig;
+import com.krrrr38.jabot.config.JabotConfig;
 
 public class JabotRunner {
 

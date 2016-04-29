@@ -154,6 +154,7 @@
 
     <modules>
         <module>jabot-app</module>
+        <module>jabot-loader</module>
         <module>jabot-plugin-base</module>
         <module>jabot-handler-plugin</module>
         <module>jabot-adapter-plugin</module>

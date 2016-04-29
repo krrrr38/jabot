@@ -34,9 +34,15 @@ public class JabotContext {
     }
 
     public void listenAdapter() {
+        logger.info("Start application");
         adapter.listen();
-        handlers.forEach(Handler::beforeDestroy);
+        destroy();
+    }
+
+    public void destroy() {
+        logger.info("Stop application");
         adapter.beforeDestroy();
+        handlers.forEach(Handler::beforeDestroy);
         brain.beforeDestroy();
     }
 }

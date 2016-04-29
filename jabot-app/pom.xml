@@ -12,7 +12,6 @@
     <properties>
         <args4j.version>2.32</args4j.version>
         <snakeyaml.version>1.15</snakeyaml.version>
-        <slf4j.version>1.7.12</slf4j.version>
         <logback.version>1.1.7</logback.version>
     </properties>
 
@@ -20,26 +19,11 @@
         <!-- jabot core dependencies -->
         <dependency>
             <groupId>com.krrrr38</groupId>
-            <artifactId>jabot-adapter-plugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.krrrr38</groupId>
-            <artifactId>jabot-handler-plugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.krrrr38</groupId>
-            <artifactId>jabot-brain-plugin</artifactId>
+            <artifactId>jabot-loader</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- jabot default plugins which merged in packaging -->
-        <dependency>
-            <groupId>com.krrrr38</groupId>
-            <artifactId>jabot-inmemory-brain</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.krrrr38</groupId>
             <artifactId>jabot-redis-brain</artifactId>

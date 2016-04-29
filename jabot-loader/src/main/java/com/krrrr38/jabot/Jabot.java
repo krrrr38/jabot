@@ -22,7 +22,10 @@ public class Jabot {
     }
 
     public void start() {
-        logger.info("Start application");
         context.listenAdapter();
+    }
+
+    public void stop() {
+        context.destroy();
     }
 }

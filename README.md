@@ -76,6 +76,12 @@ Test
 make test
 ```
 
+### jabot-app
+executable interface project
+
+### jabot-loader
+core functions to load plugins and start application
+
 ## Development jabot Plugins
 When using following plugins, just package and copy jar into plugins directory and edit `plugins.yml`, then restart jabot.
 
