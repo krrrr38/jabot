@@ -10,11 +10,6 @@
     <artifactId>jabot-redis-brain</artifactId>
     <name>jabot-redis-brain</name>
 
-    <properties>
-        <jedis.version>2.7.3</jedis.version>
-    </properties>
-
-
     <dependencies>
         <dependency>
             <groupId>com.krrrr38</groupId>

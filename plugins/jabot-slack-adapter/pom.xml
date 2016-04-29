@@ -10,10 +10,6 @@
     <artifactId>jabot-slack-adapter</artifactId>
     <name>jabot-slack-adapter</name>
 
-    <properties>
-        <simpleslackapi.version>0.4.4</simpleslackapi.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.krrrr38</groupId>

@@ -9,10 +9,6 @@
     <artifactId>jabot-plugin-base</artifactId>
     <name>jabot-plugin-base</name>
 
-    <properties>
-        <slf4j.version>1.7.12</slf4j.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>

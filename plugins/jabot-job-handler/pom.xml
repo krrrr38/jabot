@@ -10,10 +10,6 @@
     <artifactId>jabot-job-handler</artifactId>
     <name>jabot-job-handler</name>
 
-    <properties>
-        <cron4j.version>2.2.5</cron4j.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.krrrr38</groupId>
