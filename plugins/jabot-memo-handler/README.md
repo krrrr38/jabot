@@ -3,7 +3,8 @@
 all user's sharing memo by key
 
 ```sh
-list memos # or `memos`
+list memos # show memo key list or `memos`
+memo <key> # show memo
 add memo <key> <memo>
 delete memo <key>
 delete all memos

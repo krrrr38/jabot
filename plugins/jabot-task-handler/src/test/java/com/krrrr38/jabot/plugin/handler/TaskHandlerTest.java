@@ -47,17 +47,20 @@ public class TaskHandlerTest {
         assertThat(queue.peekLast().getMessage(), containsString("Registered new task"));
         assertThat(handler.receive(sender, "add task message2"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("Registered new task"));
+        assertThat(handler.receive(sender, "add task message3"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("Registered new task"));
 
-        assertThat(handler.receive(sender, "delete task 2"), is(Optional.empty()));
-        assertThat(queue.peekLast().getMessage(), containsString("No such task"));
+        assertThat(handler.receive(sender, "delete task 1000"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("No task deleted"));
 
-        assertThat(handler.receive(sender, "delete task 1"), is(Optional.empty()));
+        assertThat(handler.receive(sender, "delete task 1 2 1 2 1"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("Task Deleted: message2"));
 
         assertThat(handler.receive(sender, "list tasks"), is(Optional.empty()));
         String listMessage = queue.peekLast().getMessage();
         assertThat("task stored correctly", listMessage, containsString("message1"));
         assertThat("task deleted correctly", listMessage, not(containsString("message2")));
+        assertThat("task deleted correctly", listMessage, not(containsString("message3")));
 
         Sender otherSender = new Sender("other-id", "", "", "");
         assertThat(handler.receive(otherSender, "list tasks"), is(Optional.empty()));

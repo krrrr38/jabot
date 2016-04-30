@@ -2,11 +2,13 @@ package com.krrrr38.jabot.plugin.handler;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -62,31 +64,50 @@ public class TaskHandler extends Handler {
 
     private final Rule DELETE_TASK =
             new Rule(
-                    Pattern.compile("\\Adelete task (\\d{1,9})\\z", Pattern.CASE_INSENSITIVE),
+                    Pattern.compile("\\Adelete task (\\d[\\d|\\s]*)\\z", Pattern.CASE_INSENSITIVE),
                     HANDLER_NAME,
                     "Delete user's task task by index",
                     "delete task <index:\\d{1,9}>",
                     false,
                     (sender, strings) -> brainGuard(() -> {
-                        int index = Integer.parseInt(strings[0]);
                         String senderId = sender.getId().orElse(ALL_USERS_TASKS_MANAGEMENT_ID);
                         try {
                             List<String> tasks = loadTasks(senderId);
-                            if (index < 0 || tasks.size() <= index) {
-                                send(new SendMessage(
-                                        "No such task: " + index + ", max index is " + (tasks.size() - 1)));
-                                return Optional.empty();
-                            }
+                            List<Integer> indexes =
+                                    Arrays.stream(strings[0].trim().split("\\s"))
+                                          .map(String::trim)
+                                          .filter(str -> !str.isEmpty())
+                                          .map(str -> {
+                                              try {
+                                                  return Integer.parseInt(str);
+                                              } catch (NumberFormatException e) {
+                                                  send(new SendMessage(
+                                                          "Illegal argument " + str + ": " + e.getMessage()));
+                                                  return -1;
+                                              }
+                                          })
+                                          .filter(index -> 0 <= index && index < tasks.size())
+                                          .collect(Collectors.toList());
+                            List<Integer> sortedUniqueIndexes = new HashSet<>(indexes)
+                                    .stream()
+                                    .sorted((i, j) -> j - i)
+                                    .collect(Collectors.toList());
 
-                            String deletedTask = tasks.remove(index);
-                            if (deletedTask != null) {
+                            boolean hasDeleteTask = false;
+                            for (Integer index : sortedUniqueIndexes) {
+                                String deletedTask = tasks.remove((int) index);
+                                if (deletedTask != null) {
+                                    send(new SendMessage("Task Deleted: " + deletedTask));
+                                    hasDeleteTask = true;
+                                }
+                            }
+                            if (hasDeleteTask) {
                                 storeTasks(senderId, tasks);
-                                send(new SendMessage("Task Deleted: " + deletedTask));
                             } else {
-                                send(new SendMessage("No such task"));
+                                send(new SendMessage("No task deleted"));
                             }
                         } catch (IOException e) {
-                            send(new SendMessage("Failed to deserialize tasks: " + e.getMessage()));
+                            send(new SendMessage("Failed to serialize tasks: " + e.getMessage()));
                         }
                         return Optional.empty();
                     })
@@ -158,5 +179,12 @@ public class TaskHandler extends Handler {
 
     @Override
     public void afterRegister(List<Handler> handlers) {
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new HashSet<>(Arrays.asList(3, 5, 4, 1, 9, 4))
+                                   .stream()
+                                   .sorted((i, j) -> j - i)
+                                   .collect(Collectors.toList()));
     }
 }

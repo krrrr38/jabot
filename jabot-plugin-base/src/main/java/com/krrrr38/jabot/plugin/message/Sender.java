@@ -10,6 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class Sender {
+    public static final Sender ANONYMOUS = new Sender(null, null, null, null);
     private String id;
     private String mentionId;
     private String name;

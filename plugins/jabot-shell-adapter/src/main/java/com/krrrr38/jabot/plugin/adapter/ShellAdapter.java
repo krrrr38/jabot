@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.krrrr38.jabot.plugin.message.ReceiveMessage;
 import com.krrrr38.jabot.plugin.message.SendMessage;
+import com.krrrr38.jabot.plugin.message.Sender;
 
 public class ShellAdapter extends Adapter {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -36,7 +37,7 @@ public class ShellAdapter extends Adapter {
         if (EXIT_COMMAND.equals(line)) {
             stop();
         }
-        return new ReceiveMessage(null, line);
+        return new ReceiveMessage(Sender.ANONYMOUS, line);
     }
 
     @Override

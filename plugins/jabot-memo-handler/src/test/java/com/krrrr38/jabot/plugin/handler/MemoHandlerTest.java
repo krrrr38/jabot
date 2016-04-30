@@ -45,18 +45,21 @@ public class MemoHandlerTest {
         assertThat(queue.peekLast().getMessage(), containsString("Registered new memo"));
         assertThat(handler.receive(null, "add memo key2 m e\ns\ts\n\n \n a g e 2"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(), containsString("Registered new memo"));
+        assertThat(handler.receive(null, "add memo key3 m e\ns\ts\n\n \n a g e 3"), is(Optional.empty()));
+        assertThat(queue.peekLast().getMessage(), containsString("Registered new memo"));
 
         assertThat(handler.receive(null, "delete memo invalid-key"), is(Optional.empty()));
-        assertThat(queue.peekLast().getMessage(), containsString("No such memo"));
+        assertThat(queue.peekLast().getMessage(), containsString("No memo deleted"));
 
-        assertThat(handler.receive(null, "delete memo key2"), is(Optional.empty()));
+        assertThat(handler.receive(null, "delete memo key2 key3"), is(Optional.empty()));
         assertThat(queue.peekLast().getMessage(),
-                   containsString("Memo Deleted: [key2] m e\ns\ts\n\n \n a g e 2"));
+                   containsString("Memo Deleted: [key3] m e\ns\ts\n\n \n a g e 3"));
 
         assertThat(handler.receive(null, "list memos"), is(Optional.empty()));
         String listMessage = queue.peekLast().getMessage();
         assertThat("memo stored correctly", listMessage, containsString("key1"));
         assertThat("memo deleted correctly", listMessage, not(containsString("key2")));
+        assertThat("memo deleted correctly", listMessage, not(containsString("key3")));
 
         assertThat(handler.receive(null, "delete all memos"), is(Optional.empty()));
         assertThat("all memos deleted correctly", queue.peekLast().getMessage(),
