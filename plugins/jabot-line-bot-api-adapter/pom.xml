@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.krrrr38</groupId>
+        <artifactId>jabot</artifactId>
+        <version>0.2.0-SNAPSHOT</version>
+        <relativePath>../..</relativePath>
+    </parent>
+    <artifactId>jabot-line-bot-api-adapter</artifactId>
+    <name>jabot-line-bot-api-adapter</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.krrrr38</groupId>
+            <artifactId>jabot-adapter-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-core</artifactId>
+            <version>${undertow.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.linecorp.bot</groupId>
+            <artifactId>line-bot-api-client</artifactId>
+            <version>${line-bot-api.version}</version>
+        </dependency>
+    </dependencies>
+</project>

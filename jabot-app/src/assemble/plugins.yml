@@ -53,6 +53,13 @@ brain:
 #     messageNotify: false
 #     webhookPort: 4000
 #     slashCommand: "/jabot"
+# adapter: # require one adapter
+#   plugin: com.krrrr38.jabot.plugin.adapter.LineBotApiAdapter
+#   namespace: line-bot-api-adapter
+#   options:
+#     channelId: 1234567890 # required
+#     channelSecret: "Channel Secret" # required
+#     botMid: "MID" # required
 ## Brain
 #brain:
 #  plugin: com.krrrr38.jabot.plugin.brain.RedisBrain

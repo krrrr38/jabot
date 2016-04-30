@@ -61,6 +61,8 @@
         <cron4j.version>2.2.5</cron4j.version>
         <!-- slack-adapter-->
         <simpleslackapi.version>0.4.4</simpleslackapi.version>
+        <!-- line-bot-api-adapter -->
+        <line-bot-api.version>0.1.0</line-bot-api.version>
         <!-- hipchat-adapter -->
         <undertow.version>1.3.21.Final</undertow.version>
         <fluent-hc.version>4.5.2</fluent-hc.version>
@@ -191,6 +193,7 @@
         <module>plugins/jabot-shell-adapter</module>
         <module>plugins/jabot-slack-adapter</module>
         <module>plugins/jabot-hipchat-adapter</module>
+        <module>plugins/jabot-line-bot-api-adapter</module>
         <module>plugins/jabot-inmemory-brain</module>
         <module>plugins/jabot-redis-brain</module>
         <module>plugins/jabot-ping-handler</module>
