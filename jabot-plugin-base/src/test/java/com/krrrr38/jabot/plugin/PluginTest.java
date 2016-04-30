@@ -11,10 +11,14 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.EnvironmentVariables;
 
 public class PluginTest {
-    private static final String NAMESPACE = "mock-plugin";
+    @Rule
+    public final EnvironmentVariables environmentVariables = new EnvironmentVariables();
+    private static final String NAMESPACE = "name-space";
     private final Plugin plugin = new MockPlugin();
     private Map<String, String> options;
     private final String STRING_KEY = "string-key";
@@ -24,17 +28,24 @@ public class PluginTest {
     private final String LONG_KEY = "long-key";
     private final String LONG_LIST_KEY = "long-list-key";
     private final String BOOLEAN_KEY = "boolean-key";
+    private final String STRING_KEY_FROM_ENV = "string-key-from-env";
+    private final String STRING_KEY_FROM_OTHER_ENV1 = "string-key-from-other-env1";
+    private final String STRING_KEY_FROM_OTHER_ENV2 = "string-key-from-other-env2";
 
     @Before
     public void setUp() {
         options = new HashMap<>();
         options.put(STRING_KEY, "string-value");
         options.put(STRING_LIST_KEY, "value1, value2");
+        options.put(STRING_KEY_FROM_OTHER_ENV1, "ENV['OTHER_ENV']");
+        options.put(STRING_KEY_FROM_OTHER_ENV2, "ENV[OTHER_ENV]");
         options.put(INTEGER_KEY, "100");
         options.put(INTEGER_LIST_KEY, "100,200");
         options.put(LONG_KEY, "100");
         options.put(LONG_LIST_KEY, "100,200");
         options.put(BOOLEAN_KEY, "true");
+        environmentVariables.set("NAME_SPACE_STRING_KEY_FROM_ENV", "string-key-from-env-value");
+        environmentVariables.set("OTHER_ENV", "other-env-value");
     }
 
     @Test
@@ -52,6 +63,12 @@ public class PluginTest {
         }
         assertThat(plugin.optionString(options, STRING_KEY, "default", Pattern.compile("strin.*alue")),
                    is("string-value"));
+        assertThat(plugin.optionString(options, STRING_KEY_FROM_ENV, "default"),
+                   is("string-key-from-env-value"));
+        assertThat(plugin.optionString(options, STRING_KEY_FROM_OTHER_ENV1, "default"),
+                   is("other-env-value"));
+        assertThat(plugin.optionString(options, STRING_KEY_FROM_OTHER_ENV2, "default"),
+                   is("other-env-value"));
     }
 
     @Test
@@ -78,7 +95,9 @@ public class PluginTest {
         }
         assertThat(plugin.requireString(options, STRING_KEY, Pattern.compile("strin.*alue")),
                    is("string-value"));
-
+        assertThat(plugin.requireString(options, STRING_KEY_FROM_ENV), is("string-key-from-env-value"));
+        assertThat(plugin.requireString(options, STRING_KEY_FROM_OTHER_ENV1), is("other-env-value"));
+        assertThat(plugin.requireString(options, STRING_KEY_FROM_OTHER_ENV2), is("other-env-value"));
     }
 
     @Test
@@ -250,6 +269,18 @@ public class PluginTest {
             assertThat(message, containsString(NAMESPACE));
             assertThat(message, containsString("Comma separated Long"));
         }
+    }
+
+    @Test
+    public void testToUpperSnakeCase() {
+        assertThat(plugin.getEnvKey("aaa"), is("NAME_SPACE_AAA"));
+        assertThat(plugin.getEnvKey("aaa-bbb"), is("NAME_SPACE_AAA_BBB"));
+        assertThat(plugin.getEnvKey("aaa-bbb-cDd"), is("NAME_SPACE_AAA_BBB_C_DD"));
+        assertThat(plugin.getEnvKey("aaaBbb"), is("NAME_SPACE_AAA_BBB"));
+        assertThat(plugin.getEnvKey("aaa2Bbb"), is("NAME_SPACE_AAA2_BBB"));
+        assertThat(plugin.getEnvKey("aaa2Bbb ccc"), is("NAME_SPACE_AAA2_BBB_CCC"));
+        assertThat(plugin.getEnvKey("AAA_BBB"), is("NAME_SPACE_AAA_BBB"));
+        assertThat(plugin.getEnvKey("AAA_BBB_"), is("NAME_SPACE_AAA_BBB_"));
     }
 
     static class MockPlugin extends Plugin {

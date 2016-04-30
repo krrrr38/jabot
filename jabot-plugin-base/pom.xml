@@ -15,5 +15,11 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>${system-rules.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

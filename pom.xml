@@ -69,6 +69,7 @@
         <!-- test -->
         <junit.version>4.12</junit.version>
         <hamcrest-library.version>1.3</hamcrest-library.version>
+        <system-rules.version>1.16.0</system-rules.version>
         <formatter-maven-plugin.version>0.5.2</formatter-maven-plugin.version>
     </properties>
 

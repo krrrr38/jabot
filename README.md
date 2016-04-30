@@ -53,12 +53,18 @@ handlers: # NOTE: messages would be handled by THIS ORDER.
   - plugin: com.krrrr38.jabot.plugin.handler.PingHandler
     namespace: ping-handler
     options:
-      foo: bar
+      foo: ENV['OTHER_ENV']
 brain:
   plugin: com.krrrr38.jabot.plugin.brain.InmemoryBrain
   namespace: inmemory-brain
   options:
-    foo: bar
+    secretPassword: bar
+```
+
+options are also loaded from system environment variables with `NAME_SPACE_OPTION_KEY` format like followings.
+```
+SHELL_ADAPTER_PROMPT=>>>
+INMEMORY_BRAIN_SECRET_PASSWORD=bar
 ```
 
 See [plugins directory](https://github.com/krrrr38/jabot/tree/master/plugins).

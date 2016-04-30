@@ -3,6 +3,7 @@ package com.krrrr38.jabot.plugin;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -119,8 +120,19 @@ abstract public class Plugin {
         });
     }
 
+    /**
+     * read value with following methods
+     * 1. read value from environment value with NAME_SPACE_OPTION_KEY format
+     * 2. if null, read value from settings.yml options
+     * 3. if value is ENV['OTHER_ENV'], reread environment value with OTHER_ENV
+     * 4. if null, return option value
+     */
     private <T> T option(Map<String, String> options, String key, String type, T _default, ThrowableFunction<String, T> converter) {
-        String value = options.get(key);
+        String value = System.getenv(getEnvKey(key));
+        if (value == null) {
+            value = options.get(key);
+        }
+        value = convertEnvFormatValue(value);
         if (value == null) {
             return _default;
         } else {
@@ -132,8 +144,18 @@ abstract public class Plugin {
         }
     }
 
+    /**
+     * read value with following methods
+     * 1. read value from environment value with NAME_SPACE_OPTION_KEY format
+     * 2. if null, read value from settings.yml options
+     * 3. if value is ENV['OTHER_ENV'], reread environment value with OTHER_ENV
+     */
     private <T> T require(Map<String, String> options, String key, String type, ThrowableFunction<String, T> converter) {
-        String value = options.get(key);
+        String value = System.getenv(getEnvKey(key));
+        if (value == null) {
+            value = options.get(key);
+        }
+        value = convertEnvFormatValue(value);
         if (value == null) {
             throw new JabotPluginOptionException(String.format(REQUIRE_ERROR_FORMAT, getNamespace(), key, type));
         } else {
@@ -143,6 +165,33 @@ abstract public class Plugin {
                 throw new JabotPluginOptionException(String.format(TYPE_ERROR_FORMAT, getNamespace(), key, type), e);
             }
         }
+    }
+
+    // @VisibleForTesting
+    String getEnvKey(String key) {
+        return toUpperSnakeCase(getNamespace()) + "_" + toUpperSnakeCase(key);
+    }
+
+    private static final String CAMEL_CASE_REGEX = "([a-z0-9])([A-Z]+)";
+    private static final String SNAKE_CASE_REPLACEMENT = "$1_$2";
+    private String toUpperSnakeCase(String key) {
+        return key.replaceAll(CAMEL_CASE_REGEX, SNAKE_CASE_REPLACEMENT)
+                  .replaceAll("\\s+", "_")
+                  .replaceAll("-", "_")
+                  .toUpperCase();
+    }
+
+    // ENV['OTHER_ENV_VARIABLE'] => System.getEnv("OTHER_ENV_VARIABLE");
+    private static final Pattern ENV_FORMAT = Pattern.compile("ENV\\['?([^']*)'?\\]");
+    private String convertEnvFormatValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        Matcher matcher = ENV_FORMAT.matcher(value);
+        if (matcher.matches()) {
+            return System.getenv(matcher.group(1));
+        }
+        return value;
     }
 
     @FunctionalInterface
