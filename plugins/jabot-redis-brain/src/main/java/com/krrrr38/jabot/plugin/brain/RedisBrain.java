@@ -1,5 +1,7 @@
 package com.krrrr38.jabot.plugin.brain;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,6 +16,7 @@ import redis.clients.jedis.Protocol;
 public class RedisBrain extends Brain {
 
     // basic db settings
+    private static final String OPTIONS_DB_URL = "url";
     private static final String OPTIONS_DB_HOST = "host";
     private static final String OPTIONS_DB_PORT = "port";
     private static final String OPTIONS_DB_PASSWORD = "password";
@@ -35,6 +38,7 @@ public class RedisBrain extends Brain {
     @Override
     public void afterSetup(Map<String, String> options) {
         // basic db settings
+        String url = optionString(options, OPTIONS_DB_URL, null);
         String host = optionString(options, OPTIONS_DB_HOST, Protocol.DEFAULT_HOST);
         int port = optionInteger(options, OPTIONS_DB_PORT, Protocol.DEFAULT_PORT);
         String password = optionString(options, OPTIONS_DB_PASSWORD, null);
@@ -52,7 +56,15 @@ public class RedisBrain extends Brain {
         jedisPoolConfig.setTestOnBorrow(optionBoolean(options, OPTIONS_POOL_TEST_ON_BORROW, BaseObjectPoolConfig.DEFAULT_TEST_ON_BORROW));
         jedisPoolConfig.setTestOnCreate(optionBoolean(options, OPTIONS_POOL_TEST_ON_CREATE, BaseObjectPoolConfig.DEFAULT_TEST_ON_CREATE));
         jedisPoolConfig.setTestOnReturn(optionBoolean(options, OPTIONS_POOL_TEST_ON_RETURN, BaseObjectPoolConfig.DEFAULT_TEST_ON_RETURN));
-        pool = new JedisPool(jedisPoolConfig, host, port, connectionTimeout, socketTimeout, password, database, clientName);
+        if (url != null) {
+            try {
+                pool = new JedisPool(jedisPoolConfig, new URI(url), connectionTimeout, socketTimeout);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            pool = new JedisPool(jedisPoolConfig, host, port, connectionTimeout, socketTimeout, password, database, clientName);
+        }
     }
 
     @Override

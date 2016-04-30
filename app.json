@@ -1,0 +1,29 @@
+{
+    "name": "Jabot",
+    "description": "Java + Bot = Jabot",
+    "website": "https://github.com/krrrr38/jabot",
+    "repository": "https://github.com/krrrr38/jabot",
+    "keywords": [
+        "Hubot",
+        "Java",
+        "bot"
+    ],
+    "addons": [
+        "heroku-redis:hobby-dev"
+    ],
+    "env": {
+        "SLACK_TOKEN": {
+            "description": "Slack bot API Token. ref: <https://slack.com/services/new/bot>",
+            "required": true
+        },
+        "SLACK_CHANNEL": {
+            "description": "Slack channel name. e.g. 'general'",
+            "required": true,
+            "value": "general"
+        },
+        "REDIS_URL": {
+            "description": "Redis server URL. You won't need this if you are using Heroku. e.g. 'redis://localhost:6379'",
+            "required": false
+        }
+    }
+}

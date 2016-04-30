@@ -1,0 +1,44 @@
+## this file is plugin setting for heroku deployment with slack-adapter
+name: jabot
+adapter: # require one adapter
+  plugin: com.krrrr38.jabot.plugin.adapter.SlackAdapter
+  namespace: slack-adapter
+  options:
+    token: ENV['SLACK_TOKEN'] # "access https://slack.com/services/new/bot and enter above name and get token"
+    channel: ENV['SLACK_CHANNEL']
+handlers:
+  - plugin: com.krrrr38.jabot.plugin.handler.ReplaceHandler
+    namespace: replace-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.TaskHandler
+    namespace: task-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.MemoHandler
+    namespace: memo-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.JobHandler
+    namespace: job-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.HealthCheckHandler
+    namespace: health-check-handler
+    options:
+      alertPrefix: "[ERROR] "
+  - plugin: com.krrrr38.jabot.plugin.handler.HelpHandler
+    namespace: help-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.EchoHandler
+    namespace: echo-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.TimeHandler
+    namespace: time-handler
+  - plugin: com.krrrr38.jabot.plugin.handler.PingHandler
+    namespace: ping-handler
+brain:
+ plugin: com.krrrr38.jabot.plugin.brain.RedisBrain
+ namespace: redis-brain
+ options: # require REDIS_BRAIN_HOST,
+   # redis db settings
+   url: ENV['REDIS_URL']
+   connectionTimeout: 2000
+   socketTimeout: 2000
+   # redis connection pool settings
+   maxTotal: 8
+   maxIdle: 8
+   minIdle: 0
+   testWhileIdle: true
+   testOnBorrow: false
+   testOnReturn: false

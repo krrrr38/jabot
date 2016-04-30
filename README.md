@@ -12,7 +12,13 @@ This module is inspired by [Ruboty](https://github.com/r7kamura/ruboty), thank y
 
 ![](./images/jabot.png)
 
-## Usage
+## Deploy your own
+
+### Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy) with [Slack](https://slack.com/services/new/bot)
+
+### executable binary
 
 Access [Latest Releases Page](https://github.com/krrrr38/jabot/releases/latest)
 

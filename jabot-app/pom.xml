@@ -105,6 +105,19 @@
     <build>
         <plugins>
             <plugin>
+                <!-- for heroku: https://devcenter.heroku.com/articles/deploying-java -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals><goal>copy-dependencies</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <!-- merge fat-jar with executable bin in target/appasemmble -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>appassembler-maven-plugin</artifactId>
