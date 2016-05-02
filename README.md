@@ -18,6 +18,14 @@ This module is inspired by [Ruboty](https://github.com/r7kamura/ruboty), thank y
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy) with [Slack](https://slack.com/services/new/bot)
 
+### Docker
+```
+mkdir -p $HOME/logs/jabot
+docker run --name redis -d redis
+docker build --name jabot .
+docker run --link redis:redis -v $HOME/logs/jabot:/logs -d -p 4000:4000 --name jabot jabot
+```
+
 ### executable binary
 
 Access [Latest Releases Page](https://github.com/krrrr38/jabot/releases/latest)
