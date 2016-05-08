@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.krrrr38</groupId>
         <artifactId>jabot</artifactId>
-        <version>0.2.0-SNAPSHOT</version>
+        <version>0.2.0</version>
     </parent>
     <artifactId>jabot-adapter-plugin</artifactId>
     <name>jabot-adapter-plugin</name>
