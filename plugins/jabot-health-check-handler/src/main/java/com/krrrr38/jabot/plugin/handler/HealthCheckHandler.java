@@ -41,7 +41,8 @@ public class HealthCheckHandler extends Handler {
     private static final String OPTIONS_SOCKET_TIMEOUT = "socketTimeout";
     private static final int DEFAULT_SOCKET_TIMEOUT = 3000;
     private static final String OPTIONS_USER_AGENT = "userAgent";
-    private static final String DEFAULT_USER_AGENT = "jabot-health-check";
+    private static final String DEFAULT_USER_AGENT =
+            "jabot-health-check/" + HealthCheckHandler.class.getPackage().getImplementationVersion();
     private static final String OPTIONS_CUSTOM_HEADER_NAME = "customHeaderName";
     private static final String DEFAULT_CUSTOM_HEADER_NAME = null;
     private static final String OPTIONS_CUSTOM_HEADER_VALUE = "customHeaderValue";
